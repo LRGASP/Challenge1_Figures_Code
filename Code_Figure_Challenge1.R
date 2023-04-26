@@ -67,6 +67,7 @@ cat.palette = c( "FSM"="#6BAED6", "ISM"="#FC8D59", "NIC"="#78C679",
 source("Functions_Supplementary_Figures_Challenge1_v3.R")
 
 setwd("./DataFigures")
+data_sample = "WTC11_results/WTC11"
 
 # FIGURES
 #################
@@ -78,7 +79,7 @@ FirstPanelChl1 (data_sample = "WTC11", ylims = c(160000, 250000), xlims = c(1200
 
 # Figure 2b. Overlap
 #########################
-agreement.pipelines(data_sample = "WTC11_results/WTC11")
+agreement.pipelines(data_sample = data_sample)
 
 # Figure 2c. SIRVs
 #########################
