@@ -1,5 +1,12 @@
 ##### Code for Supplementary figures for Challenge 1   ####
 ###########################################################
+traceback_and_stop <- function() {
+  traceback(2)
+  quit("no", status=1, runLast=FALSE) 
+}
+if (!interactive()) {
+  options(error=traceback_and_stop)
+}
 
 ## Libraries ##
 ###############
