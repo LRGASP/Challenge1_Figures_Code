@@ -8,7 +8,7 @@
 
 
 ###############
-load("Functions_Supplementary_Figures_Challenge1_v2.R")
+source("Functions_Supplementary_Figures_Challenge1_v2.R")
 
 ### Data
 setwd("./DataFigures")
