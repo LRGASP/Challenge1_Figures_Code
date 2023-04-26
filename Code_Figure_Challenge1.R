@@ -66,6 +66,8 @@ cat.palette = c( "FSM"="#6BAED6", "ISM"="#FC8D59", "NIC"="#78C679",
 #################
 source("Functions_Supplementary_Figures_Challenge1_v3.R")
 
+setwd("./DataFigures")
+
 # FIGURES
 #################
 
