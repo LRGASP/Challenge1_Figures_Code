@@ -179,3 +179,6 @@ pdf(file= "Manual_Curation_WTC11_2.pdf", width=10, height=7)
 figure2d2 
 dev.off()
 
+# Local Variables:
+# ess-indent-offset: 2
+# End:

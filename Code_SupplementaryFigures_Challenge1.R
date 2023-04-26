@@ -1047,5 +1047,6 @@ pdf(paste0("figures/Supplementary_Fig.",suppl,".pdf"))
 annotate_figure(figureS52,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
-
-
+# Local Variables:
+# ess-indent-offset: 2
+# End:
