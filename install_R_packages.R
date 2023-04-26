@@ -35,7 +35,8 @@ packages <- c(
         "reshape2",
         "scales",
         "tidyr",
-        "viridis"
+        "viridis",
+        "svglite"
 )
 
 lapply(packages, install_if_missing)
@@ -45,3 +46,7 @@ install_github_if_missing("RColorConesa", "ConesaLab/RColorConesa")
 
 # Load the packages
 lapply(packages, library, character.only = TRUE)
+
+# Local Variables:
+# ess-indent-offset: 2
+# End:
