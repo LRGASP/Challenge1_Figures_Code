@@ -1189,8 +1189,7 @@ comparisons.plot <- function (bp.data, my_comparisons, name) {
 
 ##### Function to display the agreement in transcript detections across pipelines
 agreement.pipelines <- function (data_sample) {
-  pa_table <- read.csv(paste0(data_sample,".pa.csv"), sep=",", header = T)
-  
+  pa_table <- read.csv(paste0("./",data_sample,"_comparison.pa.csv"), sep=",", header = T)
   pa_table <- pa_table[!grepl("SIRV", pa_table$TAGS),]
   pa_table <- pa_table[!grepl("ERCC", pa_table$TAGS),]
   
@@ -1235,7 +1234,6 @@ agreement.pipelines <- function (data_sample) {
   
   p10
 }
-
 ##### Functions to compute the pairwise overlap between pipelies
 get_overlap_matrix <- function(pa, pipe){
   only_pipelines <- pa[, pipe]
