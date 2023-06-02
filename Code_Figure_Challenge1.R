@@ -35,6 +35,9 @@ library(ggcorrplot)
 library(viridis)
 library(fmsb)
 
+outdir = "output/main"
+dir.create(outdir, recursive=TRUE, showWarnings=FALSE)
+
 # PATTERNS
 #################
 
@@ -64,26 +67,28 @@ cat.palette = c( "FSM"="#6BAED6", "ISM"="#FC8D59", "NIC"="#78C679",
 
 # FUNCTIONS
 #################
-source("Functions_Supplementary_Figures_Challenge1_v3.R")
-
-setwd("./DataFigures")
-data_sample = "WTC11_results/WTC11"
+source("Functions_Supplementary_Figures_Challenge1_v4.R")
 
 # FIGURES
 #################
 
-# Figure 2a. Detections
+# Figure 2a. Detection
 #########################
-FirstPanelChl1 (data_sample = "WTC11", ylims = c(160000, 250000), xlims = c(12000, 28000))
+FirstPanelChl1 (data_sample = "WTC11", outdir = outdir, ylims = c(160000, 350000), xlims = c(12000, 28000))
 # Plots are generated separately and composed in PowerPoint.
 
 # Figure 2b. Overlap
 #########################
-agreement.pipelines(data_sample = data_sample)
+Fig2b <- agreement.pipelines(data_sample = "WTC11_results/WTC11")
+ggsave(file=paste0(outdir, "/Fig2b.svg"), plot=Fig2b, width=9, height=4)
 
 # Figure 2c. SIRVs
 #########################
-spliced_SIRV_metrics <- read.csv(paste0(data_sample,".splicedSIRVS_metrics.csv"), sep=",", header=T) %>% t() %>% as.data.frame()
+data_sample = "WTC11_results/WTC11"
+code <- read.csv("Challenge1_Figures_Data/code.csv", header = TRUE)
+code$Label <- paste(code$Library_Preps, code$Platform, sep="-")
+code$Lib_Plat <- paste(code$Library_Preps, code$Platform, sep="-")
+spliced_SIRV_metrics <- read.csv(paste0("Challenge1_Figures_Data/", data_sample,".splicedSIRVS_metrics.csv"), sep=",", header=T) %>% t() %>% as.data.frame()
 spliced_SIRV_metrics <- merge(spliced_SIRV_metrics, code, by.x=0, by.y="pipelineCode")
 spliced_SIRV_metrics[, "F1 score"] <- apply(spliced_SIRV_metrics, 1, function(x){
   s=as.numeric(x["Sensitivity"])
@@ -108,12 +113,12 @@ pSIRVspliced <- ggplot(pivoted_spliced, aes(x=Label, y=value)) +
   theme(legend.position="none") +
   theme(axis.text.x=element_blank(), axis.ticks.x=element_blank())+
   scale_y_continuous(expand=expansion(mult=c(0,0.1)),limits = c(0, NA), position="right")
-figure_name <- paste0(data_sample, ".splicedSIRVs.svg")
-ggsave(file=paste0("../Figures_Challenge1/",figure_name), plot=pSIRVspliced, width=9, height=4)
+
+ggsave(file=paste0(outdir, "/Fig2c_up.svg"), plot=pSIRVspliced, width=9, height=4)
 
 #### same for unspliced
 
-unspliced_SIRV_metrics <- read.csv(paste0(data_sample,".unsplicedSIRVS_metrics.csv"), sep=",", header=T) %>% t()
+unspliced_SIRV_metrics <- read.csv(paste0("Challenge1_Figures_Data/", data_sample,".unsplicedSIRVS_metrics.csv"), sep=",", header=T) %>% t()
 unspliced_SIRV_metrics <- merge(unspliced_SIRV_metrics, code, by.x=0, by.y="pipelineCode")
 
 unspliced_SIRV_metrics[, "F1 score"] <- apply(unspliced_SIRV_metrics, 1, function(x){
@@ -140,27 +145,31 @@ pSIRVunspliced <- ggplot(pivoted_unspliced, aes(x=Label, y=value)) +
   theme(axis.text.x=element_blank(), axis.ticks.x=element_blank())+
   scale_y_continuous(expand=expansion(mult=c(0,0.1)),limits = c(0, NA), position="right")
 
-figure_name <- paste0(data_sample, ".unsplicedSIRVs.svg")
-ggsave(file=paste0("../Figures_Challenge1/",figure_name), plot=pSIRVunspliced, width=9, height=4)
+ggsave(file=paste0(outdir, "/Fig2c_down.svg"), plot=pSIRVunspliced, width=9, height=4)
 
 
 # Figure 2d. Radarplot
 #########################
-radar.simulation (species = "human", directory = "Simulations/", pdf = "figures/figure2c")
+radar.simulation (species = "human", directory = "Challenge1_Figures_Data/Simulations/", pdf = paste0(outdir, "/Fig2d"))
 
 ## Figure 2e. Evaluation against GENCODE
 ########################################
-genocode_eval_WTC11 <- peformance.genecode (gencode.pa = pa_GENCODE, ID_UIC = ID_UIC,
+pa_GENCODE <- read.csv("Challenge1_Figures_Data/GENCODE_manualAnnot/presence_absence.GENCODE_loci_2.csv", sep=",", header = T) [,1:51] # Presence absence analysis of all transcripits of the 50 loci in pipelines evaluated against manual annotation. 
+pa.WTC11 <- read.csv("Challenge1_Figures_Data/WTC11_results/WTC11_comparison.pa.csv", as.is = TRUE)
+gencode_eval_results <- read.csv("Challenge1_Figures_Data/GENCODE_manualAnnot/new_GENCODE_manualAnnot_evaluation.csv", header = T) # evaluation result
+code <- read.csv("Challenge1_Figures_Data/code.csv", header = TRUE)
+
+genocode_eval_WTC11 <- peformance.genecode (gencode.pa = pa_GENCODE, ID_UIC = NULL,
                                             pa = pa.WTC11,  code = code, 
-                                            selection = FALSE, evaluation = gencode_eval_results,
+                                            selection = NULL, evaluation = gencode_eval_results,
                                             mypattern = "SQ3_human",
-                                            directory = "GENCODE_manualAnnot/classifications/human/")
+                                            directory = "Challenge1_Figures_Data/GENCODE_manualAnnot/classifications/human/")
 
 pivoted_gencode_gene <- pivot_longer(genocode_eval_WTC11, cols = c("Sensitivity.Genes", "Precision.Genes", "F1_score.Genes"))
 pivoted_gencode_known <- pivot_longer(genocode_eval_WTC11 , cols = c("Sensitivity_known", "Precision_known", "F1_known"))
 pivoted_gencode_novel <- pivot_longer(genocode_eval_WTC11 , cols = c("Sensitivity_novel", "Precision_novel", "F1_novel"))
-genocode_eval_WTC11$False_known <- genocode_eval_WTC11$Transcript_models_known - genocode_eval_WTC11$TRUE_known
-genocode_eval_WTC11$False_novel <- genocode_eval_WTC11$Transcript_models_novel - genocode_eval_WTC11$TRUE_novel
+genocode_eval_WTC11$FALSE_known <- genocode_eval_WTC11$Transcript_models_known - genocode_eval_WTC11$TRUE_known
+genocode_eval_WTC11$FALSE_novel <- genocode_eval_WTC11$Transcript_models_novel - genocode_eval_WTC11$TRUE_novel
 pivoted_gencode_TP <- pivot_longer(genocode_eval_WTC11 , cols = c("TRUE_known", "TRUE_novel", "FALSE_known", "FALSE_novel"))
 pivoted_gencode_TP <- pivoted_gencode_TP[pivoted_gencode_TP$value > 0,]
 
@@ -174,14 +183,6 @@ figure2d <- ggarrange(pC.gene.left, pC.known.mid,  pC.novel, labels = c("", "", 
 figure2d2 <- ggarrange(  pC.TP,  pC.TP,labels = c("", ""),
                          ncol = 2, nrow = 1, common.legend = TRUE)
 
-pdf(file= "Manual_Curation_WTC11.pdf", width=10, height=7)
-figure2d 
-dev.off()
 
-pdf(file= "Manual_Curation_WTC11_2.pdf", width=10, height=7)
-figure2d2 
-dev.off()
-
-# Local Variables:
-# ess-indent-offset: 2
-# End:
+ggsave(file=paste0(outdir, "/Fig2d_1.svg"), plot=figure2d, width=10, height=7)
+ggsave(file=paste0(outdir, "/Fig2d_2.svg"), plot=figure2d2, width=10, height=7)

@@ -1,15 +1,3 @@
-##### Code for Supplementary figures for Challenge 1   ####
-###########################################################
-traceback_and_stop <- function() {
-  traceback(2)
-  quit("no", status=1, runLast=FALSE) 
-}
-if (!interactive()) {
-  options(error=traceback_and_stop)
-}
-
-## Libraries ##
-###############
 library(RColorConesa)
 library(ggplot2)
 library(ggpubr)
@@ -92,17 +80,15 @@ replace_elements <- function(A, C_to_B) {
 # Function First panel Challenge 1 main figure.
 #############################################
 
-FirstPanelChl1 <- function (data_sample = "H1_mix", ylims = c(160000, 250000), xlims = c(18000, 22000)) {
-
-  working_dir <-paste0("./", data_sample, "_results")
-  mydir <- getwd()
-  setwd(working_dir)
+FirstPanelChl1 <- function (data_sample = "H1_mix", outdir = "./", ylims = c(160000, 250000), xlims = c(18000, 22000)) {
   
-  genes_file <- paste0(data_sample,".genes_SJ_table.csv")
+  data_sample2 <-paste0("Challenge1_Figures_Data/", data_sample, "_results/", data_sample)
+  
+  genes_file <- paste0(data_sample2,".genes_SJ_table.csv")
   genes_SJ <- read.csv(genes_file, header = T, sep = ",")%>% t()
-  num_trx_file <- paste0(data_sample, ".summary_table_SC.csv") 
+  num_trx_file <- paste0(data_sample2, ".summary_table_SC.csv") 
   num_trx <- read.csv(num_trx_file, header = T, sep = ",")
-  code_file <- paste0(data_sample, ".code_updated.txt")
+  code_file <- paste0( data_sample2, ".code_updated.txt")
   code=read.csv(code_file, header = T, sep=",")
   
   code$Lib_Plat <- apply(code, 1, function(x){
@@ -204,7 +190,7 @@ FirstPanelChl1 <- function (data_sample = "H1_mix", ylims = c(160000, 250000), x
            axis.title.x = element_text(size=20)) +
     theme(legend.position = "none")
   
-  figure_name <- paste0(data_sample, ".plot_numGenes-numTrx.0.svg")
+  figure_name <- paste0(outdir, "/", data_sample, ".plot_numGenes-numTrx.0.svg")
   ggsave(file=figure_name, plot=p1.0, width=8, height=8)
   
   p1.0_zoom <- p1.0 + 
@@ -212,7 +198,7 @@ FirstPanelChl1 <- function (data_sample = "H1_mix", ylims = c(160000, 250000), x
     scale_x_continuous(label = unit_format(unit = "K", scale = 0.001, accuracy = 1), expand = expansion(mult=c(0,0.1)), limits = xlims) +
     xlab("") + ylab("")
   
-  figure_name <- paste0(data_sample, ".plot_numGenes-numTrx.0_zoom.svg")
+  figure_name <- paste0(outdir, "/", data_sample, ".plot_numGenes-numTrx.0_zoom.svg")
   ggsave(file=figure_name, plot=p1.0_zoom, width=4, height=4)
   
   
@@ -230,8 +216,9 @@ FirstPanelChl1 <- function (data_sample = "H1_mix", ylims = c(160000, 250000), x
            axis.title.x = element_text(size=20)) +
     theme(legend.position = "none")
   
-  figure_name <- paste0(data_sample, ".plot_numGenes-numTrx.svg")
+  figure_name <- paste0(outdir, "/", data_sample, ".plot_numGenes-numTrx.svg")
   ggsave(file=figure_name, plot=p1, width=8, height=8)
+
   
   
   #+
@@ -252,7 +239,7 @@ FirstPanelChl1 <- function (data_sample = "H1_mix", ylims = c(160000, 250000), x
            axis.title.x = element_text(size=20)) +
     theme(legend.position = "none")
   
-  figure_name <- paste0(data_sample, ".plot_numGenes-numKnTrx.svg")
+  figure_name <- paste0(outdir, "/", data_sample, ".plot_numGenes-numKnTrx.svg")
   ggsave(file=figure_name, plot=p2, width=8, height=8)
   
   p2_tool <- ggplot(big_df, aes(x=Num.KnGenes, y=knowTrx, color=Tool))+
@@ -269,7 +256,7 @@ FirstPanelChl1 <- function (data_sample = "H1_mix", ylims = c(160000, 250000), x
            axis.title.x = element_text(size=20)) +
     theme(legend.position = "none")
   
-  figure_name <- paste0(data_sample, ".plot_numGenes-numKnTrx_tool.svg")
+  figure_name <- paste0(outdir, "/", data_sample, ".plot_numGenes-numKnTrx_tool.svg")
   ggsave(file=figure_name, plot=p2_tool, width=8, height=8)
   
   #########plot % FSM vs %ISM
@@ -288,7 +275,7 @@ FirstPanelChl1 <- function (data_sample = "H1_mix", ylims = c(160000, 250000), x
            axis.title.x = element_text(size=20)) +
     theme(legend.position = "none")
   
-  figure_name <- paste0(data_sample, ".plot_percFSM-ISM.svg")
+  figure_name <- paste0(outdir, "/", data_sample, ".plot_percFSM-ISM.svg")
   ggsave(file=figure_name, plot=p3, width=8, height=8)
   
   p3_tool <- ggplot(big_df, aes(x=FSM_perc, y=ISM_perc, color=Tool))+
@@ -305,7 +292,7 @@ FirstPanelChl1 <- function (data_sample = "H1_mix", ylims = c(160000, 250000), x
            axis.title.x = element_text(size=20)) +
     theme(legend.position = "none")
   
-  figure_name <- paste0(data_sample, ".plot_percFSM-ISM_tool.svg")
+  figure_name <- paste0(outdir, "/", data_sample, ".plot_percFSM-ISM_tool.svg")
   ggsave(file=figure_name, plot=p3_tool, width=8, height=8)
   
   #########plot % NIC vs % NNC
@@ -324,7 +311,7 @@ FirstPanelChl1 <- function (data_sample = "H1_mix", ylims = c(160000, 250000), x
            axis.title.x = element_text(size=20)) +
     theme(legend.position = "none")
   
-  figure_name <- paste0(data_sample, ".plot_percNIC-NNC.svg")
+  figure_name <- paste0(outdir, "/", data_sample, ".plot_percNIC-NNC.svg")
   ggsave(file=,figure_name, plot=p4, width=8, height=8)
   
   p4_tool <- ggplot(big_df, aes(x=NIC_perc, y=NNC_perc, color=Tool))+
@@ -341,7 +328,7 @@ FirstPanelChl1 <- function (data_sample = "H1_mix", ylims = c(160000, 250000), x
            axis.title.x = element_text(size=20)) +
     theme(legend.position = "none")
   
-  figure_name <- paste0(data_sample, ".plot_percNIC-NNC_tool.svg")
+  figure_name <- paste0(outdir, "/", data_sample, ".plot_percNIC-NNC_tool.svg")
   ggsave(file=figure_name, plot=p4_tool, width=8, height=8)
   
   ##############################################
@@ -349,10 +336,10 @@ FirstPanelChl1 <- function (data_sample = "H1_mix", ylims = c(160000, 250000), x
   ###### It will only include info about FSM, ISM, NIC and NNC
   
   ## First we need to read all the data. 
-  fsm_metrics <- read.csv(paste0(data_sample,".FSM_metrics.csv"), sep=",", header = T) %>% t()
-  ism_metrics <- read.csv(paste0(data_sample,".ISM_metrics.csv"), sep=",", header = T) %>% t()
-  nic_metrics <- read.csv(paste0(data_sample,".NIC_metrics.csv"), sep=",", header=T) %>% t()
-  nnc_metrics <- read.csv(paste0(data_sample,".NNC_metrics.csv"), sep=",", header=T) %>% t()
+  fsm_metrics <- read.csv(paste0(data_sample2,".FSM_metrics.csv"), sep=",", header = T) %>% t()
+  ism_metrics <- read.csv(paste0(data_sample2,".ISM_metrics.csv"), sep=",", header = T) %>% t()
+  nic_metrics <- read.csv(paste0(data_sample2,".NIC_metrics.csv"), sep=",", header=T) %>% t()
+  nnc_metrics <- read.csv(paste0(data_sample2,".NNC_metrics.csv"), sep=",", header=T) %>% t()
   
   support_df <- data.frame(FSM_5ref=fsm_metrics[,"5' reference supported (gene)"], FSM_5illumina=fsm_metrics[,"5' CAGE supported"], 
                            FSM_3ref=fsm_metrics[,"3' reference supported (gene)"], FSM_3illumina=fsm_metrics[,"3' QuantSeq supported"],
@@ -413,7 +400,7 @@ FirstPanelChl1 <- function (data_sample = "H1_mix", ylims = c(160000, 250000), x
            axis.title.x = element_text(size=20)) +
     theme(legend.position = "none")
   
-  figure_name <- paste0(data_sample, ".plot_5endSupport.svg")
+  figure_name <- paste0(outdir, "/", data_sample, ".plot_5endSupport.svg")
   ggsave(file=figure_name, plot=p5, width=8, height=8)
   
   
@@ -431,12 +418,12 @@ FirstPanelChl1 <- function (data_sample = "H1_mix", ylims = c(160000, 250000), x
            axis.title.x = element_text(size=20)) +
     theme(legend.position = "none")
   
-  figure_name <- paste0(data_sample, ".plot_3endSupport.svg")
+  figure_name <- paste0(outdir, "/", data_sample, ".plot_3endSupport.svg")
   ggsave(file=figure_name, plot=p6, width=8, height=8)
   
   #### SJ plots
   
-  sj_info <- read.csv(paste0(data_sample,".SJ_info.csv"), sep=",", header=T)
+  sj_info <- read.csv(paste0(data_sample2,".SJ_info.csv"), sep=",", header=T)
   
   sj_info <- merge(sj_info,code, by="pipelineCode")
   sj_info$perc_known <- apply(sj_info,1,function(x){
@@ -467,7 +454,7 @@ FirstPanelChl1 <- function (data_sample = "H1_mix", ylims = c(160000, 250000), x
            axis.title.x = element_text(size=20)) +
     theme(legend.position = "none")
   
-  figure_name <- paste0(data_sample, ".plot_SJ_known-coverage.svg")
+  figure_name <- paste0(outdir, "/", data_sample, ".plot_SJ_known-coverage.svg")
   ggsave(file=figure_name, plot=p7, width=8, height=8)
   
   p8 <- ggplot(sj_info, aes(x=perc_canonical, y=perc_cov, color=Lib_Plat))+
@@ -484,7 +471,7 @@ FirstPanelChl1 <- function (data_sample = "H1_mix", ylims = c(160000, 250000), x
            axis.title.x = element_text(size=20)) +
     theme(legend.position = "none")
   
-  figure_name <- paste0(data_sample, ".plot_SJ_canonical-coverage.svg")
+  figure_name <- paste0(outdir, "/", data_sample, ".plot_SJ_canonical-coverage.svg")
   ggsave(file=figure_name, plot=p8, width=8, height=8)
   
   
@@ -493,7 +480,7 @@ FirstPanelChl1 <- function (data_sample = "H1_mix", ylims = c(160000, 250000), x
     scale_y_continuous(label=label_percent(scale=1), expand = expansion(mult=c(0.1,0.1)), limits = c(92,100))+
     scale_x_continuous(label=label_percent(scale=1), expand = expansion(mult=c(0.1,0.1)), limits = c(98.5,100))
   
-  figure_name <- paste0(data_sample, ".plot_SJ_canonical-coverage.zoom.svg")
+  figure_name <- paste0(outdir, "/", data_sample, ".plot_SJ_canonical-coverage.zoom.svg")
   ggsave(file=figure_name, plot=p8_zoom, width=8, height=8)
   
   #### plot SRTM vs SNTM
@@ -536,7 +523,7 @@ FirstPanelChl1 <- function (data_sample = "H1_mix", ylims = c(160000, 250000), x
            axis.title.x = element_text(size=20)) +
     theme(legend.position = "none")
   
-  figure_name <- paste0(data_sample, ".plot_SRTM_SNTM.svg")
+  figure_name <- paste0(outdir, "/", data_sample, ".plot_SRTM_SNTM.svg")
   ggsave(file=figure_name, plot=p9, width=8, height=8)
   
   #### get legend image
@@ -559,11 +546,9 @@ FirstPanelChl1 <- function (data_sample = "H1_mix", ylims = c(160000, 250000), x
   
   p_leg <- as_ggplot(leg)
   
-  figure_name <- paste0(data_sample, ".plot_legend.svg")
+  figure_name <- paste0(outdir, "/", data_sample, ".plot_legend.svg")
   ggsave(file=figure_name, plot=p_leg, width=5, height=8)
-  
 
-  setwd(mydir)
 }
 
 
@@ -1189,7 +1174,8 @@ comparisons.plot <- function (bp.data, my_comparisons, name) {
 
 ##### Function to display the agreement in transcript detections across pipelines
 agreement.pipelines <- function (data_sample) {
-  pa_table <- read.csv(paste0("./",data_sample,"_comparison.pa.csv"), sep=",", header = T)
+  pa_table <- read.csv(paste0("Challenge1_Figures_Data/",data_sample,"_comparison.pa.csv"), sep=",", header = T)
+  
   pa_table <- pa_table[!grepl("SIRV", pa_table$TAGS),]
   pa_table <- pa_table[!grepl("ERCC", pa_table$TAGS),]
   
@@ -1471,104 +1457,104 @@ radarchart2 <- function (df, axistype = 0, seg = 4, pty = 16, pcol = 1:8, plty =
   }
 }
 
-  radar.simulation <- function (species = "human", directory = "simulations/", pdf, text = NULL, a = 2) {
-    
-    # select species
-    sim_data <- species
-    code <- read.csv(paste0(directory, sim_data, "_simulation.code.txt"), header = T, sep=",")
-    
-    # create labels
-    code$Lib_Plat <- apply(code, 1, function(x){
-      paste(x["Library_Preps"], x["Platform"], sep = "_")
-    })
-    code$Lib_DC=apply(cbind(code[,c("Library_Preps", "Data_Category")]), 1, paste, collapse="_")
-    code$Label <-apply(cbind(code[,c("Library_Preps", "Platform", "Data_Category")]), 1, paste, collapse="_")
-    
-    #set colors
-    mycolors = c( "cDNA_PacBio_LO"="#d8527c", "cDNA_PacBio_LS"="#9a133d", 
-                  "cDNA_ONT_LO"="#6996e3", "cDNA_ONT_LS"="#1a318b" )
-    if(species == "mouse") { 
-      names(mycolors) = sort(unique(code$Label))
-    }
-    
-    # read data
-    sim_file_prefix <- paste0("simulations/", sim_data, "_simulation_comparison.")
-    sim_metrics <- read.csv(paste0(sim_file_prefix, "totsim_metrics.csv"), header = T, as.is = T) %>% t()
-    sim0_metrics <- read.csv(paste0(sim_file_prefix, "totsim0_metrics.csv"), header = T, as.is = T) %>% t()
-    sim1_metrics <- read.csv(paste0(sim_file_prefix, "totsim1_metrics.csv"), header = T, as.is = T) %>% t()
-    sim5_metrics <- read.csv(paste0(sim_file_prefix, "totsim5_metrics.csv"), header = T, as.is = T) %>% t()
-    simN_metrics <- read.csv(paste0(sim_file_prefix, "novelsim_metrics.csv"), header = T, as.is = T) %>% t()
-    
-    # calculate performance
-    sim_SC <- paste0(directory, sim_data, "_simulation_comparison.summary_table_SC.csv")
-    sim_SC <- read.csv(sim_SC, header = TRUE, as.is = TRUE) 
-    sim_SC$total.novel <- sim_SC$total-sim_SC$FSM
-    sim_metrics <- as.data.frame(sim_metrics)
-    simN_metrics <- as.data.frame(simN_metrics)
-    simN_metrics$FP <- sim_SC$total.novel
-    sim_metrics$Precision_k <- sim_metrics[,"True Positive detections (TP)"] /sim_SC$FSM
-    simN_metrics$Precision <- simN_metrics[,"Number of transcripts associated to TP (Reference Match)"]/(simN_metrics[,"Number of transcripts associated to TP (Reference Match)"]+ simN_metrics$FP)
-    simN_metrics$nrPrecision <- simN_metrics[,"True Positive detections (TP)"] /(simN_metrics[,"True Positive detections (TP)"]+ simN_metrics$FP)
-    Inv.Redundancy = round(1/sim_metrics[,"Redundancy"],2)
-    metrics2 <- cbind(sim0_metrics[,c("Sensitivity")],
-                      sim5_metrics[,c("Sensitivity")],
-                      sim_metrics[,c("Precision_k")],
-                      simN_metrics[,c("Sensitivity")],
-                      simN_metrics[,c("Precision")],
-                      Inv.Redundancy)
-    
-    colnames(metrics2)<- c("Sen_kn", "   Sen_kn \n >5TPM", "Pre_kn", "Sen_no", "Pre_no", "1/Red")
-    
-    # merge data
-    metrics2 <- merge(metrics2, code, by.x=0, by.y="pipelineCode")
-    metrics2$Tool <- gsub(pattern = "_", replacement = " ", x = metrics2$Tool)
-    tool = sort(unique(metrics2$Tool))
-    plat_lib <- unique(metrics2$Label)
-    
-    figure_name <- paste0(pdf, ".pdf" )
-    pdf(figure_name ,width = 7, height = 8)
-    #pdf(figure_name ,width = 10, height = 8) # size used for main paper panel
-    
-    par(mar=c(0,0.5,1.5,0) + 0.1)
-    #layout(matrix(c(1:12,13,13,13,13),  byrow = TRUE, ncol = 4,nrow = 4)) # for main figure
-    layout(matrix(c(1:12,13,13,13),  byrow = TRUE, ncol = 3,nrow = 5))
-    
-    sel <- metrics2$Tool == tool[11]
-    subms <- metrics2[sel,c(2:7)]
-    radarchart2(subms , axistype=1 ,vlabcol = c("darkgoldenrod4", "darkgoldenrod4", "darkgoldenrod4", "darkorchid4", "darkorchid4", "black"),
-                #custom polygon
-                pcol= mycolors[metrics2[sel,38]], plwd=2 , plty=1.3,
-                #custom the grid
-                cglcol="grey", cglty=1, axislabcol="grey", cglwd = 0.8, caxislabels=seq(0,0.25,1), 
-                #custom labels
-                vlabels = colnames(subms), vlcex=1.5, palcex = 1.5, cex.main=1.5)
-    
-    for ( i in 1:11) {
-      sel <- metrics2$Tool == tool[i]
-      subms <- metrics2[sel,c(2:7)]
-      subms <- rbind(rep(1,ncol(subms)) , rep(0,ncol(subms)), subms)
-      radarchart(subms, axistype=1 , title= tool[i],
-                 #custom polygon
-                 pcol= mycolors[metrics2[sel,16]], plwd=2 , plty=1.3,
-                 #custom the grid
-                 cglcol = "grey", cglty=1, axislabcol="white", cglwd = 0.8, caxislabels=seq(0,0.25,1), 
-                 #custom labels
-                 vlabels = rep("",6), palcex = 0, cex.main=1.5, paxislabels = 0
-                 #vlabels = short.labls , palcex = 1, cex.main=1.7, paxislabels = 0, col = c(2,2,2,3,3,1)
-      )
-    }
-    
-    
-    # Add a legend
-    plot(1, type = "n", axes=FALSE, xlab="", ylab="")
-    plot_colors <- c("blue","black", "green", "orange", "pink")
-    l <- legend(x = "top",inset = 0, legend = names(mycolors), horiz = TRUE, bty = "n", pch=20 , col=mycolors , text.col = "black", cex=1.2, pt.cex=3)
-    if (!is.null(text)) {
-      text(x=l$text$x-a , y=l$text$y-l$rect$h, c(text,"","",""), adj=c(0,1))
-    }
-    
-    dev.off()
+radar.simulation <- function (species = "human", directory = "simulations/", pdf, text = NULL, a = 2) {
+  
+  # select species
+  sim_data <- species
+  code <- read.csv(paste0(directory, sim_data, "_simulation.code.txt"), header = T, sep=",")
+  
+  # create labels
+  code$Lib_Plat <- apply(code, 1, function(x){
+    paste(x["Library_Preps"], x["Platform"], sep = "_")
+  })
+  code$Lib_DC=apply(cbind(code[,c("Library_Preps", "Data_Category")]), 1, paste, collapse="_")
+  code$Label <-apply(cbind(code[,c("Library_Preps", "Platform", "Data_Category")]), 1, paste, collapse="_")
+  
+  #set colors
+  mycolors = c( "cDNA_PacBio_LO"="#d8527c", "cDNA_PacBio_LS"="#9a133d", 
+                "cDNA_ONT_LO"="#6996e3", "cDNA_ONT_LS"="#1a318b" )
+  if(species == "mouse") { 
+    names(mycolors) = sort(unique(code$Label))
   }
+  
+  # read data
+  sim_file_prefix <- paste0(directory, sim_data, "_simulation_comparison.")
+  sim_metrics <- read.csv(paste0(sim_file_prefix, "totsim_metrics.csv"), header = T, as.is = T) %>% t()
+  sim0_metrics <- read.csv(paste0(sim_file_prefix, "totsim0_metrics.csv"), header = T, as.is = T) %>% t()
+  sim1_metrics <- read.csv(paste0(sim_file_prefix, "totsim1_metrics.csv"), header = T, as.is = T) %>% t()
+  sim5_metrics <- read.csv(paste0(sim_file_prefix, "totsim5_metrics.csv"), header = T, as.is = T) %>% t()
+  simN_metrics <- read.csv(paste0(sim_file_prefix, "novelsim_metrics.csv"), header = T, as.is = T) %>% t()
+  
+  # calculate performance
+  sim_SC <- paste0(directory, sim_data, "_simulation_comparison.summary_table_SC.csv")
+  sim_SC <- read.csv(sim_SC, header = TRUE, as.is = TRUE) 
+  sim_SC$total.novel <- sim_SC$total-sim_SC$FSM
+  sim_metrics <- as.data.frame(sim_metrics)
+  simN_metrics <- as.data.frame(simN_metrics)
+  simN_metrics$FP <- sim_SC$total.novel
+  sim_metrics$Precision_k <- sim_metrics[,"True Positive detections (TP)"] /sim_SC$FSM
+  simN_metrics$Precision <- simN_metrics[,"Number of transcripts associated to TP (Reference Match)"]/(simN_metrics[,"Number of transcripts associated to TP (Reference Match)"]+ simN_metrics$FP)
+  simN_metrics$nrPrecision <- simN_metrics[,"True Positive detections (TP)"] /(simN_metrics[,"True Positive detections (TP)"]+ simN_metrics$FP)
+  Inv.Redundancy = round(1/sim_metrics[,"Redundancy"],2)
+  metrics2 <- cbind(sim0_metrics[,c("Sensitivity")],
+                    sim5_metrics[,c("Sensitivity")],
+                    sim_metrics[,c("Precision_k")],
+                    simN_metrics[,c("Sensitivity")],
+                    simN_metrics[,c("Precision")],
+                    Inv.Redundancy)
+  
+  colnames(metrics2)<- c("Sen_kn", "   Sen_kn \n >5TPM", "Pre_kn", "Sen_no", "Pre_no", "1/Red")
+  
+  # merge data
+  metrics2 <- merge(metrics2, code, by.x=0, by.y="pipelineCode")
+  metrics2$Tool <- gsub(pattern = "_", replacement = " ", x = metrics2$Tool)
+  tool = sort(unique(metrics2$Tool))
+  plat_lib <- unique(metrics2$Label)
+  
+  figure_name <- paste0(pdf, ".pdf" )
+  pdf(figure_name ,width = 7, height = 8)
+  #pdf(figure_name ,width = 10, height = 8) # size used for main paper panel
+  
+  par(mar=c(0,0.5,1.5,0) + 0.1)
+  #layout(matrix(c(1:12,13,13,13,13),  byrow = TRUE, ncol = 4,nrow = 4)) # for main figure
+  layout(matrix(c(1:12,13,13,13),  byrow = TRUE, ncol = 3,nrow = 5))
+  
+  sel <- metrics2$Tool == tool[11]
+  subms <- metrics2[sel,c(2:7)]
+  radarchart2(subms , axistype=1 ,vlabcol = c("darkgoldenrod4", "darkgoldenrod4", "darkgoldenrod4", "darkorchid4", "darkorchid4", "black"),
+              #custom polygon
+              pcol= mycolors[metrics2[sel,38]], plwd=2 , plty=1.3,
+              #custom the grid
+              cglcol="grey", cglty=1, axislabcol="grey", cglwd = 0.8, caxislabels=seq(0,0.25,1), 
+              #custom labels
+              vlabels = colnames(subms), vlcex=1.5, palcex = 1.5, cex.main=1.5)
+  
+  for ( i in 1:11) {
+    sel <- metrics2$Tool == tool[i]
+    subms <- metrics2[sel,c(2:7)]
+    subms <- rbind(rep(1,ncol(subms)) , rep(0,ncol(subms)), subms)
+    radarchart(subms, axistype=1 , title= tool[i],
+               #custom polygon
+               pcol= mycolors[metrics2[sel,16]], plwd=2 , plty=1.3,
+               #custom the grid
+               cglcol = "grey", cglty=1, axislabcol="white", cglwd = 0.8, caxislabels=seq(0,0.25,1), 
+               #custom labels
+               vlabels = rep("",6), palcex = 0, cex.main=1.5, paxislabels = 0
+               #vlabels = short.labls , palcex = 1, cex.main=1.7, paxislabels = 0, col = c(2,2,2,3,3,1)
+    )
+  }
+  
+  
+  # Add a legend
+  plot(1, type = "n", axes=FALSE, xlab="", ylab="")
+  plot_colors <- c("blue","black", "green", "orange", "pink")
+  l <- legend(x = "top",inset = 0, legend = names(mycolors), horiz = TRUE, bty = "n", pch=20 , col=mycolors , text.col = "black", cex=1.2, pt.cex=3)
+  if (!is.null(text)) {
+    text(x=l$text$x-a , y=l$text$y-l$rect$h, c(text,"","",""), adj=c(0,1))
+  }
+  
+  dev.off()
+}
 
 #### Gencode manual annotation analysis
 # function to evaluate the SC of Genconde manually curated transcripts 
@@ -2003,46 +1989,39 @@ performance.genecode2 <- function (pa = pa.WTC11, pa_GENCODE = pa_GENCODE, code 
 }
 
 performance.genecode3 <- function (pa = pa.WTC11, pa_GENCODE = pa_GENCODE, code = code, gencode.self = gencode.self, selection = selection, directory) {
-
+  
   #read gencode files with the type of transcript (known or novel) each transcript is
-gencode.FSM <- read.gencode(mypattern = "known_UIC", directory = directory); n1 = sapply(gencode.FSM , length); n1 # gencode manual annotation that are FSM of existing transcripts 
-libraries.fsm <- names(gencode.FMS)
-all.FSM <- unlist(gencode.FSM)
-gencode.novel <- read.gencode(mypattern = "novel_UIC", directory = directory); n2 = sapply(gencode.novel , length); n2 # gencode manual annotation that are novel of existing transcripts 
-all.novel <- unlist(gencode.novel)
-libraries.novel <- names(gencode.novel)
-gencode.manual <- data.frame(transcript_id = c(all.FMS, all.novel), 
-                             library = c(rep(libraries.fsm, n1), rep(libraries.novel, n2)),
-                             manual_vs_existing = c(rep("FSM", length(all.FSM)), rep("Novel", length(all.novel)))
-)
-head(gencode.manual)
-
-if(!is.null(selection)) {
-  not.selection <-  setdiff(gencode.manual$transcript_id, selection) # transcripts to exclude
-  gencode.manual <- gencode.manual[gencode.manual$transcript_id %in% selection,]
-  new.novel.positions <- which(pa_GENCODE$associated_transcript %in% not.selection)
-  pa_GENCODE$structural_category[new.novel.positions] <- paste0("novel", 1:length(new.novel.positions))
+  gencode.FSM <- read.gencode(mypattern = "known_UIC", directory = directory); n1 = sapply(gencode.FSM , length); n1 # gencode manual annotation that are FSM of existing transcripts 
+  libraries.fsm <- names(gencode.FMS)
+  all.FSM <- unlist(gencode.FSM)
+  gencode.novel <- read.gencode(mypattern = "novel_UIC", directory = directory); n2 = sapply(gencode.novel , length); n2 # gencode manual annotation that are novel of existing transcripts 
+  all.novel <- unlist(gencode.novel)
+  libraries.novel <- names(gencode.novel)
+  gencode.manual <- data.frame(transcript_id = c(all.FMS, all.novel), 
+                               library = c(rep(libraries.fsm, n1), rep(libraries.novel, n2)),
+                               manual_vs_existing = c(rep("FSM", length(all.FSM)), rep("Novel", length(all.novel)))
+  )
+  head(gencode.manual)
+  
+  if(!is.null(selection)) {
+    not.selection <-  setdiff(gencode.manual$transcript_id, selection) # transcripts to exclude
+    gencode.manual <- gencode.manual[gencode.manual$transcript_id %in% selection,]
+    new.novel.positions <- which(pa_GENCODE$associated_transcript %in% not.selection)
+    pa_GENCODE$structural_category[new.novel.positions] <- paste0("novel", 1:length(new.novel.positions))
+  }
+  
+  ground.truth.numbers <- table(gencode.manual$library,gencode.manual$manual_vs_existing )
+  
+  #obtain the UICs without the SC
+  pa_SCs <- pa[,1:2] # this is the PA of the pipelines against the NORMAL annotation
+  colnames(pa_SCs)[2] <- "SC_normal_annotation"
+  pa_SCs[,1] <- sapply(pa_SCs[,1], function (x) paste(strsplit(x, split = "_")[[1]][-1], collapse= "_"))
+  
+  # Additional variables to code
+  code$Sample_code <- paste(code$Library_Preps, code$Platform, sep = "_")
+  code$Label<- paste(code$Library_Preps, code$Platform, code$Data_Category, sep = "_")
+  code$Lib_Plat <- paste(code$Library_Preps, code$Platform, sep = "_")
+  
+  #merge the evaluation results against GENCODE and against the normal annotation
+  pa.GENCODE_2 <- merge(pa_GENCODE, pa_SCs, by.x = "Row.names", by.y = "TAGS")
 }
-
-ground.truth.numbers <- table(gencode.manual$library,gencode.manual$manual_vs_existing )
-
-#obtain the UICs without the SC
-pa_SCs <- pa[,1:2] # this is the PA of the pipelines against the NORMAL annotation
-colnames(pa_SCs)[2] <- "SC_normal_annotation"
-pa_SCs[,1] <- sapply(pa_SCs[,1], function (x) paste(strsplit(x, split = "_")[[1]][-1], collapse= "_"))
-
-# Additional variables to code
-code$Sample_code <- paste(code$Library_Preps, code$Platform, sep = "_")
-code$Label<- paste(code$Library_Preps, code$Platform, code$Data_Category, sep = "_")
-code$Lib_Plat <- paste(code$Library_Preps, code$Platform, sep = "_")
-
-#merge the evaluation results against GENCODE and against the normal annotation
-pa.GENCODE_2 <- merge(pa_GENCODE, pa_SCs, by.x = "Row.names", by.y = "TAGS")
-}
-
-
-
-
-# Local Variables:
-# ess-indent-offset: 2
-# End:
