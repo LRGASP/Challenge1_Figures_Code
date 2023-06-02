@@ -1686,15 +1686,15 @@ peformance.genecode <- function (gencode.pa, pa, code, directory, mypattern, eva
     b <- length(which(logical))
     gencode.pa$associated_transcript[logical] <- paste0("novel", c(1001:(1001+b-1)))
     gencode.pa$structural_category[logical] <- "NOVEL"
-    }
+  }
   number.gencode <- data.frame (genes = sapply(SQ3.data, function (x) length(unique(x$associated_gene))),
                                 transcripts =  sapply(SQ3.data , nrow), 
                                 known = sapply(SQ3.data, function (x) length(which(x$structural_category == "full-splice_match"))),
                                 novel = sapply(SQ3.data, function (x) length(which(x$structural_category != "full-splice_match"))))
   gencode.manual <- data.frame(transcript_id = unlist(sapply(SQ3.data, function (x) x$isoform)), 
-                                library = rep(names(SQ3.data), sapply(SQ3.data , nrow)),
-                                manual_vs_existing = unlist(sapply(SQ3.data, function (x) x$structural_category)))
-
+                               library = rep(names(SQ3.data), sapply(SQ3.data , nrow)),
+                               manual_vs_existing = unlist(sapply(SQ3.data, function (x) x$structural_category)))
+  
   #obtain the UICs without the SC
   pa_SCs <- pa[,1:2] # this is the PA of the pipelines against the NORMAL annotation, with all genes
   colnames(pa_SCs)[2] <- "SC_normal_annotation"
@@ -1704,7 +1704,7 @@ peformance.genecode <- function (gencode.pa, pa, code, directory, mypattern, eva
   code$Sample_code <- paste(code$Library_Preps, code$Platform, sep = "-")
   code$Label<- paste(code$Library_Preps, code$Platform, code$Data_Category, sep = "-")
   code$Lib_Plat <- paste(code$Library_Preps, code$Platform, sep = "-")
-
+  
   # Merge in one table the SC of transcripts in the 47 pipelines when evaluated against normal annotation and against manual annotation
   pa.GENCODE.sample <- merge(gencode.pa, pa_SCs, by.x = "Row.names", by.y = "TAGS") # This contains the UIC of the pipelines associated to the 50 loci
   
@@ -1768,13 +1768,14 @@ peformance.genecode <- function (gencode.pa, pa, code, directory, mypattern, eva
   evaluation2$F1_total <- (2 * evaluation2$Sensitivity_total * evaluation2$Precision_total) / (evaluation2$Sensitivity_total + evaluation2$Precision_total)
   evaluation2$F1_known <- (2 * evaluation2$Sensitivity_known * evaluation2$Precision_known) / (evaluation2$Sensitivity_known + evaluation2$Precision_known)
   evaluation2$F1_novel <- (2 * evaluation2$Sensitivity_novel * evaluation2$Precision_novel) / (evaluation2$Sensitivity_novel + evaluation2$Precision_novel)
-  evaluation2$F1.Genes <- (2 * evaluation2$Sensitivity.Genes * evaluation2$Precision.Genes) / (evaluation2$Sensitivity.Genes + evaluation2$Precision.Genes)
+  evaluation2$F1_score.Genes <- (2 * evaluation2$Sensitivity.Genes * evaluation2$Precision.Genes) / (evaluation2$Sensitivity.Genes + evaluation2$Precision.Genes)
   evaluation2$Redundancy_known <- evaluation2$Transcript_models_known / evaluation2$Unique_detected_known
   evaluation2$Redundancy_novel <- evaluation2$Transcript_models_novel / evaluation2$Unique_detected_novel
   evaluation2$Redundancy_total <- evaluation2$Total_transcript_models / evaluation2$Total_detections
   
   evaluation2
 }
+
 
 Performance_plot_left <- function (mydata, main,  axis.text.x = 11) { 
   ggplot(mydata, aes(x=value,y=Label, color=name, shape=name)) +
