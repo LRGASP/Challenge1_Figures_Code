@@ -775,7 +775,7 @@ dev.off()
 ## Extended Data Fig.43
 ##########################
 suppl = "43"
-text = "Supplementary Fig.43. Performance metrics on mouse simulated data. Sen_kn: sensitivity known transcripts, \nSen_kn > 5TMP: sensitivity known transcripts with expression > 5 TPM, Pre_kn: precision known transcripts,
+text = "Extended Data Fig.43. Performance metrics on mouse simulated data. Sen_kn: sensitivity known transcripts, \nSen_kn > 5TMP: sensitivity known transcripts with expression > 5 TPM, Pre_kn: precision known transcripts,
 Sen_no: sensitivity novel transcripts, Pre_no: precision novel transcripts, 1/Red: inverse of redundancy."
 radar.simulation (species = "mouse", directory = "Challenge1_Figures_Data/Simulations/", pdf = paste0(outdir, "/Extended_Fig._43"), text = text, a = 0.05)
 
