@@ -152,6 +152,9 @@ ggsave(file=paste0(outdir, "/Fig2c_down.svg"), plot=pSIRVunspliced, width=9, hei
 #########################
 radar.simulation (species = "human", directory = "Challenge1_Figures_Data/Simulations/", pdf = paste0(outdir, "/Fig2d"))
 
+radar.simulation (species = "mouse", directory = "Challenge1_Figures_Data/Simulations/", pdf = paste0(outdir, "/Fig2d_mouse"))
+
+
 ## Figure 2e. Evaluation against GENCODE
 ########################################
 pa_GENCODE <- read.csv("Challenge1_Figures_Data/GENCODE_manualAnnot/presence_absence.GENCODE_loci_2.csv", sep=",", header = T) [,1:51] # Presence absence analysis of all transcripits of the 50 loci in pipelines evaluated against manual annotation. 
@@ -159,30 +162,105 @@ pa.WTC11 <- read.csv("Challenge1_Figures_Data/WTC11_results/WTC11_comparison.pa.
 gencode_eval_results <- read.csv("Challenge1_Figures_Data/GENCODE_manualAnnot/new_GENCODE_manualAnnot_evaluation.csv", header = T) # evaluation result
 code <- read.csv("Challenge1_Figures_Data/code.csv", header = TRUE)
 
-genocode_eval_WTC11 <- peformance.genecode (gencode.pa = pa_GENCODE, ID_UIC = NULL,
+genocode_eval_WTC11 <- performance.genecode (gencode.pa = pa_GENCODE, ID_UIC = NULL,
                                             pa = pa.WTC11,  code = code, 
                                             selection = NULL, evaluation = gencode_eval_results,
                                             mypattern = "SQ3_human",
                                             directory = "Challenge1_Figures_Data/GENCODE_manualAnnot/classifications/human/")
 
 pivoted_gencode_gene <- pivot_longer(genocode_eval_WTC11, cols = c("Sensitivity.Genes", "Precision.Genes", "F1_score.Genes"))
+pivoted_gencode_gene$name <- pivoted_gencode_gene$name %>% factor(levels = c("Sensitivity.Genes", "Precision.Genes", "F1_score.Genes"),
+                                                                  labels = c("Sensitivity", "Precision", "F1-score"))
+
 pivoted_gencode_known <- pivot_longer(genocode_eval_WTC11 , cols = c("Sensitivity_known", "Precision_known", "F1_known"))
+pivoted_gencode_known$name <- pivoted_gencode_known$name %>% factor(levels = c("Sensitivity_known", "Precision_known", "F1_known"),
+                                                                  labels = c("Sensitivity", "Precision", "F1-score"))
+
 pivoted_gencode_novel <- pivot_longer(genocode_eval_WTC11 , cols = c("Sensitivity_novel", "Precision_novel", "F1_novel"))
+pivoted_gencode_novel$name <- pivoted_gencode_novel$name %>% factor(levels = c("Sensitivity_novel", "Precision_novel", "F1_novel"),
+                                                                  labels = c("Sensitivity", "Precision", "F1-score"))
+
 genocode_eval_WTC11$FALSE_known <- genocode_eval_WTC11$Transcript_models_known - genocode_eval_WTC11$TRUE_known
 genocode_eval_WTC11$FALSE_novel <- genocode_eval_WTC11$Transcript_models_novel - genocode_eval_WTC11$TRUE_novel
 pivoted_gencode_TP <- pivot_longer(genocode_eval_WTC11 , cols = c("TRUE_known", "TRUE_novel", "FALSE_known", "FALSE_novel"))
 pivoted_gencode_TP <- pivoted_gencode_TP[pivoted_gencode_TP$value > 0,]
 
-pC.gene.left <- Performance_plot_left(pivoted_gencode_gene, main = "Gene level" )
-pC.known.mid <- Performance_plot_middel(pivoted_gencode_known, main = "Known_transcript level" )
-pC.novel <- Performance_plot_right(pivoted_gencode_novel, main = "Novel_transcript level" )
-pC.TP <- Performance_plot_TP(pivoted_gencode_TP , main = "Number detected transcripts" )
-
-figure2d <- ggarrange(pC.gene.left, pC.known.mid,  pC.novel, labels = c("", "", ""),
-                      ncol = 3, nrow = 1, common.legend = TRUE)
-figure2d2 <- ggarrange(  pC.TP,  pC.TP,labels = c("", ""),
-                         ncol = 2, nrow = 1, common.legend = TRUE)
+#pivoted_gencode_TP <- pivoted_gencode_TP %>% separate(name, c("Ground_Truth", "novelty"))
+pivoted_gencode_TP$name <- pivoted_gencode_TP$name %>% factor(levels = c("TRUE_known","TRUE_novel",
+                                                                         "FALSE_known", "FALSE_novel"),
+                                                           labels = c("TRUE\nknown", "TRUE\nnovel",
+                                                                      "FALSE\nknown", "FALSE\nnovel"))
 
 
-ggsave(file=paste0(outdir, "/Fig2d_1.svg"), plot=figure2d, width=10, height=7)
-ggsave(file=paste0(outdir, "/Fig2d_2.svg"), plot=figure2d2, width=10, height=7)
+#pC.gene.left <- Performance_plot_left(pivoted_gencode_gene, main = "Gene level" )
+pC.gene.left <- ggplot(pivoted_gencode_gene, aes(x=Label, y=value)) +
+  geom_segment( aes(x=Label, xend=Label, y=0, yend=value, color=Sample_code), size=0.8) +
+  geom_point( size=2, aes( shape=Data_Category, color=Sample_code ))  +
+  facet_grid( name ~ Alias, scales = "free", space = "free_x", switch = "y"  ) +
+  pub_theme +
+  scale_color_manual(values = libplat.palette) +
+  labs(x="", y="",
+       title="Gene level") +
+  theme(legend.position="bottom") +
+  theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(),
+        axis.text.y = element_text(size = 10))+
+  scale_y_continuous(expand=expansion(mult=c(0,0.1)),limits = c(0, 1), position="right")
+
+
+#pC.known.mid <- Performance_plot_middel(pivoted_gencode_known, main = "Known_transcript level" )
+pC.known.mid <- ggplot(pivoted_gencode_known, aes(x=Label, y=value)) +
+  geom_segment( aes(x=Label, xend=Label, y=0, yend=value, color=Sample_code), size=0.8) +
+  geom_point( size=2, aes( shape=Data_Category, color=Sample_code ))  +
+  facet_grid( name ~ Alias, scales = "free", space = "free_x", switch = "y"  ) +
+  pub_theme +
+  scale_color_manual(values = libplat.palette) +
+  labs(x="", y="",
+       title="Known transcript level") +
+  theme(legend.position="bottom") +
+  theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(),
+        axis.text.y = element_text(size = 10))+
+  scale_y_continuous(expand=expansion(mult=c(0,0.1)),limits = c(0, 1), position="right")
+
+#pC.novel <- Performance_plot_right(pivoted_gencode_novel, main = "Novel_transcript level" )
+pC.novel <- ggplot(pivoted_gencode_novel, aes(x=Label, y=value)) +
+  geom_segment( aes(x=Label, xend=Label, y=0, yend=value, color=Sample_code), size=0.8) +
+  geom_point( size=2, aes( shape=Data_Category, color=Sample_code ))  +
+  facet_grid( name ~ Alias, scales = "free", space = "free_x", switch = "y"  ) +
+  pub_theme +
+  scale_color_manual(values = libplat.palette) +
+  labs(x="", y="",
+       title="Novel transcript level") +
+  theme(legend.position="bottom") +
+  theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(),
+        axis.text.y = element_text(size = 10))+
+  scale_y_continuous(expand=expansion(mult=c(0,0.1)),limits = c(0, 1), position="right")
+
+#pC.TP <- Performance_plot_TP(pivoted_gencode_TP , main = "Number detected transcripts" )
+pC.TP <- ggplot(pivoted_gencode_TP, aes(x=Label, y=value)) +
+  geom_segment( aes(x=Label, xend=Label, y=0, yend=value, color=Sample_code), size=0.8) +
+  geom_point( size=2, aes( shape=Data_Category, color=Sample_code ))  +
+  facet_grid( name ~ Alias, scales = "free", space = "free_x", switch = "y"  ) +
+  pub_theme +
+  scale_color_manual(values = libplat.palette) +
+  labs(x="", y="",
+       title="Detected transcripts of manual curation") +
+  theme(legend.position="bottom") +
+  theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(),
+        axis.text.y = element_text(size = 10))+
+  scale_y_continuous(expand=expansion(mult=c(0,0.1)),limits = c(0, NA), position="right")
+
+#figure2d <- ggarrange(pC.gene.left, pC.known.mid, pC.novel,
+#                      labels = c("", "", ""),
+#                      ncol = 3, nrow = 1, common.legend = TRUE)
+
+figure2d <- ggarrange(pC.gene.left, pC.known.mid,
+                      pC.novel, pC.TP,
+                      ncol = 2, nrow = 2, common.legend = TRUE)
+
+#figure2d2 <- ggarrange(  pC.TP,  pC.TP, labels = c("", ""),
+#                         ncol = 2, nrow = 1, common.legend = TRUE)
+
+
+ggsave(file=paste0(outdir, "/Fig2d_1.svg"), plot=figure2d, width=20, height=7)
+#ggsave(file=paste0(outdir, "/Fig2d_2.svg"), plot=figure2d2, width=10, height=7)
+

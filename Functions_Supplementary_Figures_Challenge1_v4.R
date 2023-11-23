@@ -132,7 +132,7 @@ FirstPanelChl1 <- function (data_sample = "H1_mix", outdir = "./", ylims = c(160
   ggplot(count_LibPlat, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=Lib_Plat)) +
     geom_rect() +
     geom_label( x=3.5, aes(y=labelPosition, label=label), size=6, label.size = NA, show.legend = F) +
-    geom_label(aes(x = 2, y = 0, label = "Total\nsubmissions: 47"), size=7, label.size = NA, inherit.aes = FALSE)+
+    geom_label(aes(x = 2, y = 0, label = "Total\nsubmissions: 53"), size=7, label.size = NA, inherit.aes = FALSE)+
     scale_fill_manual(values = libplat.palette, limits=force, name="") +
     coord_polar(theta="y") +
     xlim(c(2, 4)) +
@@ -1659,7 +1659,7 @@ read.gencode <- function (mypattern, directory, cols = 1, header = FALSE) {
 }
 
 # function to compute performance metrics of pipelines agains the GENCODE manual annotation
-peformance.genecode <- function (gencode.pa, pa, code, directory, mypattern, evaluation, ID_UIC = ID_UIC, selection = NULL, gencode.self = NULL) {
+performance.genecode <- function (gencode.pa, pa, code, directory, mypattern, evaluation, ID_UIC = ID_UIC, selection = NULL, gencode.self = NULL) {
   
   #read gencode files with the type of transcript (known or novel) each transcript is
   SQ3.data <- read.gencode(mypattern= mypattern, directory = directory, cols =c(1,6,7,8), header = TRUE)
@@ -1692,6 +1692,7 @@ peformance.genecode <- function (gencode.pa, pa, code, directory, mypattern, eva
   code$Lib_Plat <- paste(code$Library_Preps, code$Platform, sep = "-")
   
   # Merge in one table the SC of transcripts in the 47 pipelines when evaluated against normal annotation and against manual annotation
+  pa_SCs$TAGS2 <- paste0(pa_SCs$SC_normal_annotation, pa_SCs$TAGS, collapse = "")
   pa.GENCODE.sample <- merge(gencode.pa, pa_SCs, by.x = "Row.names", by.y = "TAGS") # This contains the UIC of the pipelines associated to the 50 loci
   
   FSM_analysis <- matrix(0, ncol = 47, nrow = 10)
