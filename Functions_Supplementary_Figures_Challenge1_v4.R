@@ -35,6 +35,17 @@ pub_theme <- theme_pubclean(base_family = "Helvetica") +
   theme(plot.margin = unit(c(0.5,0.5,0.5,0.5), "cm")) +
   theme(legend.position = "bottom")
 
+pub_theme_flip <- theme_pubclean(base_family = "Helvetica", flip = T) +
+  theme(axis.line.x = element_line(color="black", size = 0.4),
+        axis.line.y = element_line(color="black", size = 0.4)) +
+  theme(axis.title.x = element_text(size=13),
+        axis.text.x  = element_text(size=13),
+        axis.title.y = element_text(size=13),
+        axis.text.y  = element_text(vjust=0.5, size=13) ) +
+  theme(legend.text = element_text(size = 10), legend.title = element_text(size=10), legend.key.size = unit(0.5, "cm")) +
+  theme(plot.title = element_text(lineheight=.4, size=15.5)) +
+  theme(plot.margin = unit(c(0.5,0.5,0.5,0.5), "cm")) +
+  theme(legend.position = "bottom")
 ## Colors ##
 ############
 
@@ -2026,3 +2037,226 @@ performance.genecode3 <- function (pa = pa.WTC11, pa_GENCODE = pa_GENCODE, code 
   #merge the evaluation results against GENCODE and against the normal annotation
   pa.GENCODE_2 <- merge(pa_GENCODE, pa_SCs, by.x = "Row.names", by.y = "TAGS")
 }
+
+get_realData_simulation_metrics <- function (data_sample = "H1_mix", outdir = "./", species = "human", sim_directory = "Challenge1_Figures_Data/Simulations/") {
+  
+  data_sample2 <-paste0("Challenge1_Figures_Data/", data_sample, "_results/", data_sample)
+  
+  genes_file <- paste0(data_sample2,".genes_SJ_table.csv")
+  genes_SJ <- read.csv(genes_file, header = T, sep = ",")%>% t()
+  
+  num_trx_file <- paste0(data_sample2, ".summary_table_SC.csv") 
+  num_trx <- read.csv(num_trx_file, header = T, sep = ",")
+  
+  code_file <- paste0( data_sample2, ".code_updated.txt")
+  code=read.csv(code_file, header = T, sep=",")
+  code$Lib_Plat <- apply(code, 1, function(x){
+    paste(x["Library_Preps"], x["Platform"], sep = "-")
+  })
+  code$Lib_DC=apply(cbind(code[,c("Library_Preps", "Data_Category")]), 1, paste, collapse="-")
+  code$Label <-apply(cbind(code[,c("Platform","Library_Preps", "Data_Category")]), 1, paste, collapse="-")
+  
+  big_df <- merge(num_trx, genes_SJ, by.x="ID",by.y=0)
+  
+  big_df$FSM_perc <- apply(big_df,1, function(x){
+    r <- as.numeric(x["FSM"])*100/as.numeric(x["total"])
+    r <- round(r, digits=2)
+    r
+  })
+  
+  big_df$ISM_perc <- apply(big_df,1, function(x){
+    r <- as.numeric(x["ISM"])*100/as.numeric(x["total"])
+    r <- round(r, digits=2)
+    r
+  })
+  
+  big_df$NIC_perc <- apply(big_df,1, function(x){
+    r <- as.numeric(x["NIC"])*100/as.numeric(x["total"])
+    r <- round(r, digits=2)
+    r
+  })
+  
+  big_df$NNC_perc <- apply(big_df,1, function(x){
+    r <- as.numeric(x["NNC"])*100/as.numeric(x["total"])
+    r <- round(r, digits=2)
+    r
+  })
+  
+  big_df$knowTrx <- apply(big_df, 1, function(x){
+    as.numeric(x["FSM"])+as.numeric(x["ISM"])+as.numeric(x["NIC"])+as.numeric(x["NNC"])
+  })
+  
+  big_df$avgTrxGene <- apply(big_df, 1, function(x){
+    as.numeric(x["knowTrx"])/as.numeric(x["Num.KnGenes"])
+  })
+  
+  
+  big_df <- merge(big_df, code, by.x="ID", by.y="pipelineCode")
+  
+  fsm_metrics <- read.csv(paste0(data_sample2,".FSM_metrics.csv"), sep=",", header = T) %>% t()
+  ism_metrics <- read.csv(paste0(data_sample2,".ISM_metrics.csv"), sep=",", header = T) %>% t()
+  nic_metrics <- read.csv(paste0(data_sample2,".NIC_metrics.csv"), sep=",", header=T) %>% t()
+  nnc_metrics <- read.csv(paste0(data_sample2,".NNC_metrics.csv"), sep=",", header=T) %>% t()
+  
+  support_df <- data.frame(FSM_5ref=fsm_metrics[,"5' reference supported (gene)"], FSM_5illumina=fsm_metrics[,"5' CAGE supported"], 
+                           FSM_3ref=fsm_metrics[,"3' reference supported (gene)"], FSM_3illumina=fsm_metrics[,"3' QuantSeq supported"],
+                           ISM_5ref=ism_metrics[,"5' reference supported (gene)"], ISM_5illumina=ism_metrics[,"5' CAGE supported"], 
+                           ISM_3ref=ism_metrics[,"3' reference supported (gene)"], ISM_3illumina=ism_metrics[,"3' QuantSeq supported"],
+                           NIC_5ref=nic_metrics[,"5' reference supported (gene)"], NIC_5illumina=nic_metrics[,"5' CAGE supported"], 
+                           NIC_3ref=nic_metrics[,"3' reference supported (gene)"], NIC_3illumina=nic_metrics[,"3' QuantSeq supported"],
+                           NNC_5ref=nnc_metrics[,"5' reference supported (gene)"], NNC_5illumina=nnc_metrics[,"5' CAGE supported"], 
+                           NNC_3ref=nnc_metrics[,"3' reference supported (gene)"], NNC_3illumina=nnc_metrics[,"3' QuantSeq supported"])
+  support_df$total_5ref <- apply(support_df,1, function(x){
+    as.numeric(x["FSM_5ref"])+as.numeric(x["ISM_5ref"])+as.numeric(x["NIC_5ref"])+as.numeric(x["NNC_5ref"])
+  })
+  
+  support_df$total_3ref <- apply(support_df,1, function(x){
+    as.numeric(x["FSM_3ref"])+as.numeric(x["ISM_3ref"])+as.numeric(x["NIC_3ref"])+as.numeric(x["NNC_3ref"])
+  })
+  
+  support_df$total_5illumina <- apply(support_df,1, function(x){
+    as.numeric(x["FSM_5illumina"])+as.numeric(x["ISM_5illumina"])+as.numeric(x["NIC_5illumina"])+as.numeric(x["NNC_5illumina"])
+  })
+  
+  support_df$total_3illumina <- apply(support_df,1, function(x){
+    as.numeric(x["FSM_3illumina"])+as.numeric(x["ISM_3illumina"])+as.numeric(x["NIC_3illumina"])+as.numeric(x["NNC_3illumina"])
+  })
+  
+  support_df <- merge(support_df, big_df[,c("ID", "knowTrx")], by.x=0, by.y="ID")
+  
+  support_df$perc_5ref <- apply(support_df,1,function(x){
+    as.numeric(x["total_5ref"])*100/as.numeric(x["knowTrx"])
+  })
+  
+  support_df$perc_5illumina <- apply(support_df,1,function(x){
+    as.numeric(x["total_5illumina"])*100/as.numeric(x["knowTrx"])
+  })
+  
+  support_df$perc_3ref <- apply(support_df,1,function(x){
+    as.numeric(x["total_3ref"])*100/as.numeric(x["knowTrx"])
+  })
+  
+  support_df$perc_3illumina <- apply(support_df,1,function(x){
+    as.numeric(x["total_3illumina"])*100/as.numeric(x["knowTrx"])
+  })
+  
+  support_df <- merge(support_df,code, by.x="Row.names", by.y="pipelineCode")
+  
+  #### SJ plots
+  
+  sj_info <- read.csv(paste0(data_sample2,".SJ_info.csv"), sep=",", header=T)
+  
+  sj_info <- merge(sj_info,code, by="pipelineCode")
+  sj_info$perc_known <- apply(sj_info,1,function(x){
+    as.numeric(x["known"])*100/as.numeric(x["total"])
+  })
+  sj_info$perc_canonical <- apply(sj_info,1,function(x){
+    as.numeric(x["canonical"])*100/as.numeric(x["total"])
+  })
+  sj_info$perc_cov <- apply(sj_info,1,function(x){
+    as.numeric(x["with_Coverage"])*100/as.numeric(x["total"])
+  })
+  
+  sj_info$perc_RTS <- apply(sj_info,1,function(x){
+    as.numeric(x["RTS"])*100/as.numeric(x["total"])
+  })
+  
+  ## SRTM SNTM
+  
+  STM_df <- data.frame(FSM=fsm_metrics[,"Number of isoforms"],
+                       FSM_SRTM=fsm_metrics[,"Supported Reference Transcript Model (SRTM)"],
+                       ISM=ism_metrics[,"Number of isoforms"],
+                       ISM_SRTM=ism_metrics[,"Supported Reference Transcript Model (SRTM)"],
+                       NIC=nic_metrics[,"Number of isoforms"],
+                       NIC_SNTM=nic_metrics[,"Supported Novel Transcript Model (SNTM)"],
+                       NNC=nnc_metrics[,"Number of isoforms"],
+                       NNC_SNTM=nnc_metrics[,"Supported Novel Transcript Model (SNTM)"])
+  
+  STM_df$perc_SRTM <- apply(STM_df,1, function(x){
+    r <- (as.numeric(x["FSM_SRTM"])+as.numeric(x["ISM_SRTM"]))*100/(as.numeric(x["FSM"])+as.numeric(x["ISM"]))
+    round(r, digits=2)
+  })
+  STM_df$perc_SNTM <- apply(STM_df,1, function(x){
+    r <- (as.numeric(x["NIC_SNTM"])+as.numeric(x["NNC_SNTM"]))*100/(as.numeric(x["NIC"])+as.numeric(x["NNC"]))
+    round(r, digits=2)
+  })
+  
+  STM_df$total <- apply(STM_df,1, function(x){
+    as.numeric(x["NIC"])+as.numeric(x["NNC"])+as.numeric(x["FSM"])+as.numeric(x["ISM"])
+  })
+  
+  real_data_summary <- merge(support_df, STM_df, by.x="Row.names", by.y=0)
+  perc_coverage <- sj_info %>% select(pipelineCode, perc_cov)
+  real_data_summary <- merge(real_data_summary, perc_coverage, by.x="Row.names", by.y = "pipelineCode")
+  
+  ##### simulation
+  sim_data <- species
+  code <- read.csv(paste0(sim_directory, sim_data, "_simulation.code.txt"), header = T, sep=",")
+  
+  # create labels
+  code$Lib_Plat <- apply(code, 1, function(x){
+    paste(x["Library_Preps"], x["Platform"], sep = "_")
+  })
+  code$Lib_DC=apply(cbind(code[,c("Library_Preps", "Data_Category")]), 1, paste, collapse="_")
+  code$Label <-apply(cbind(code[,c("Library_Preps", "Platform", "Data_Category")]), 1, paste, collapse="_")
+  
+  #set colors
+  mycolors = c( "cDNA_PacBio_LO"="#d8527c", "cDNA_PacBio_LS"="#9a133d", 
+                "cDNA_ONT_LO"="#6996e3", "cDNA_ONT_LS"="#1a318b" )
+  if(species == "mouse") { 
+    names(mycolors) = sort(unique(code$Label))
+  }
+  
+  # read data
+  sim_file_prefix <- paste0(sim_directory, sim_data, "_simulation_comparison.")
+  sim_metrics <- read.csv(paste0(sim_file_prefix, "totsim_metrics.csv"), header = T, as.is = T) %>% t()
+  sim0_metrics <- read.csv(paste0(sim_file_prefix, "totsim0_metrics.csv"), header = T, as.is = T) %>% t()
+  sim1_metrics <- read.csv(paste0(sim_file_prefix, "totsim1_metrics.csv"), header = T, as.is = T) %>% t()
+  sim5_metrics <- read.csv(paste0(sim_file_prefix, "totsim5_metrics.csv"), header = T, as.is = T) %>% t()
+  simN_metrics <- read.csv(paste0(sim_file_prefix, "novelsim_metrics.csv"), header = T, as.is = T) %>% t()
+  
+  # calculate performance
+  sim_SC <- paste0(sim_directory, sim_data, "_simulation_comparison.summary_table_SC.csv")
+  sim_SC <- read.csv(sim_SC, header = TRUE, as.is = TRUE) 
+  sim_SC$total.novel <- sim_SC$total-sim_SC$FSM
+  sim_metrics <- as.data.frame(sim_metrics)
+  simN_metrics <- as.data.frame(simN_metrics)
+  simN_metrics$FP <- sim_SC$total.novel
+  sim_metrics$Precision_k <- sim_metrics[,"True Positive detections (TP)"] /sim_SC$FSM
+  simN_metrics$Precision <- simN_metrics[,"Number of transcripts associated to TP (Reference Match)"]/(simN_metrics[,"Number of transcripts associated to TP (Reference Match)"]+ simN_metrics$FP)
+  simN_metrics$nrPrecision <- simN_metrics[,"True Positive detections (TP)"] /(simN_metrics[,"True Positive detections (TP)"]+ simN_metrics$FP)
+  Inv.Redundancy = round(1/sim_metrics[,"Redundancy"],2)
+  metrics2 <- cbind(sim0_metrics[,c("Sensitivity")],
+                    sim5_metrics[,c("Sensitivity")],
+                    sim_metrics[,c("Precision_k")],
+                    simN_metrics[,c("Sensitivity")],
+                    simN_metrics[,c("Precision")],
+                    Inv.Redundancy)
+  
+  colnames(metrics2)<- c("Sen_kn", "Sen_kn \n >5TPM", "Pre_kn", "Sen_no", "Pre_no", "1/Red")
+  metrics2 <- merge(metrics2, code,by.x=0, by.y="pipelineCode")
+  metrics2$Tool <- gsub(metrics2$Tool, pattern = "Lyric", replacement="Lyric*")
+  metrics2$full_Label <- paste(metrics2$Tool, metrics2$Platform, metrics2$Library_Preps,metrics2$Data_Category,
+                              sep="-")
+  
+  #############
+  ## put together these metrics
+  
+  simulation_metrics <- metrics2 %>% as.data.frame() %>% 
+    select(full_Label,"Sen_kn", "Sen_kn \n >5TPM", "Pre_kn", "Sen_no", "Pre_no", "1/Red")
+  
+  real_data_summary$total_NICNNC <- real_data_summary$NIC+real_data_summary$NNC
+  real_data_summary$total_FSMISM <- real_data_summary$FSM+real_data_summary$ISM
+  real_data_summary$full_Label <- paste(real_data_summary$Tool, real_data_summary$Label, sep="-")
+  
+  r <- merge(real_data_summary, simulation_metrics, by="full_Label",all.x = T)
+  
+  r <- r %>% select("Row.names", "Library_Preps", "Platform", "Data_Category", "Lab",
+                    "Tool", "Alias", "Lib_Plat", "Lib_DC", "Label",
+                    "perc_SRTM", "total_FSMISM", "perc_SNTM", "total_NICNNC",
+                    "perc_5illumina", "perc_3illumina", "perc_cov", "total",
+                    "Sen_kn", "Pre_kn", "Sen_no", "Pre_no")
+  r
+}
+
+

@@ -53,6 +53,19 @@ pub_theme <- theme_pubclean(base_family = "Helvetica") +
   theme(plot.margin = unit(c(0.5,0.5,0.5,0.5), "cm")) +
   theme(legend.position = "bottom")
 
+pub_theme_flip <- theme_pubclean(base_family = "Helvetica", flip=T) +
+  theme(axis.line.x = element_line(color="black", size = 0.4),
+        axis.line.y = element_line(color="black", size = 0.4)) +
+  theme(axis.title.x = element_text(size=13),
+        axis.text.x  = element_text(size=13),
+        axis.title.y = element_text(size=13),
+        axis.text.y  = element_text(vjust=0.5, size=13) ) +
+  theme(legend.text = element_text(size = 10), legend.title = element_text(size=10), legend.key.size = unit(0.5, "cm")) +
+  theme(plot.title = element_text(lineheight=.4, size=15.5)) +
+  theme(plot.margin = unit(c(0.5,0.5,0.5,0.5), "cm")) +
+  theme(legend.position = "bottom")
+
+
 old.libplat.palette = c( "cDNA-PacBio"="#e66adb", "CapTrap-PacBio"="#ab0202", "cDNA-Illumina"="#FFCF71",  "Freestyle-Freestyle"="#75b562",
                          "cDNA-ONT"="#005C75", "CapTrap-ONT"="#7482F0", "R2C2-ONT"="#74CDF0", "dRNA-ONT"="#1b36d1"
 )
@@ -264,3 +277,179 @@ figure2d <- ggarrange(pC.gene.left, pC.known.mid,
 ggsave(file=paste0(outdir, "/Fig2d_1.svg"), plot=figure2d, width=20, height=7)
 #ggsave(file=paste0(outdir, "/Fig2d_2.svg"), plot=figure2d2, width=10, height=7)
 
+
+###############
+### Summary figure
+
+realData_simulation_metrics <- get_realData_simulation_metrics(data_sample = "WTC11",
+                                                               outdir = outdir, species = "human",
+                                                               sim_directory = "Challenge1_Figures_Data/Simulations/")
+
+summary_GENCODE_eval <- genocode_eval_WTC11 %>% select(Row.names, Sensitivity_known, Precision_known, 
+                                                       Sensitivity_novel, Precision_novel, Total_detections)
+
+df_summary_metrics <- merge(realData_simulation_metrics, summary_GENCODE_eval, by="Row.names")
+
+summary_SIRVs <- spliced_SIRV_metrics %>% select(Row.names, Sensitivity, Precision)
+
+df_summary_metrics <- merge(df_summary_metrics, summary_SIRVs, by="Row.names")
+
+df_summary_metrics$perc_3illumina <- df_summary_metrics$perc_3illumina/100
+df_summary_metrics$perc_5illumina <- df_summary_metrics$perc_5illumina/100
+df_summary_metrics$perc_SRTM <- df_summary_metrics$perc_SRTM/100
+df_summary_metrics$perc_SNTM <- df_summary_metrics$perc_SNTM/100
+df_summary_metrics$perc_cov <- df_summary_metrics$perc_cov/100
+
+df_pivoted_summary <- pivot_longer(df_summary_metrics, 
+                                   cols=c("perc_SRTM", "perc_SNTM", "perc_5illumina", "perc_3illumina","perc_cov",
+                                          "Sen_kn","Pre_kn","Sen_no", "Pre_no",
+                                          "Sensitivity_known", "Precision_known",
+                                          "Sensitivity_novel", "Precision_novel",
+                                          "Sensitivity", "Precision"))
+
+df_pivoted_summary <- df_pivoted_summary %>%
+  mutate(value=ifelse(value=="NaN",
+                      0,
+                      value)) %>% 
+  group_by(name, Lib_Plat) %>%
+  mutate(Ranking = rank(value, na.last = "keep")) %>% 
+  mutate(max_rank=max(Ranking, na.rm = T))
+
+df_pivoted_summary$Ranking_adj <- df_pivoted_summary$Ranking*11/df_pivoted_summary$max_rank
+
+
+df_pivoted_summary$name <-df_pivoted_summary$name %>% 
+  factor(levels=rev(c("perc_SRTM","perc_SNTM","perc_5illumina","perc_3illumina","perc_cov",
+                     "Sensitivity","Precision",
+                     "Sensitivity_known","Precision_known",
+                     "Sensitivity_novel","Precision_novel",
+                     "Sen_kn", "Pre_kn","Sen_no","Pre_no")),
+            labels=rev(c("% SRTM", "% SNTM", "% CAGE-Seq", "% Quant-Seq","% SJ cov.",
+                     "SIRV Sensitivity", "SIRV Precision",
+                     "GENCODE Sensit. (known)", "GENCODE Prec. (known)",
+                     "GENCODE Sensit. (novel)", "GENCODE Prec. (novel)",
+                     "SIMULATION Sensit. (known)", "SIMULATION Prec. (known)",
+                     "SIMULATION Sensit. (novel)", "SIMULATION Prec. (novel)")))
+
+df_pivoted_summary <- df_pivoted_summary %>% mutate(type_metric=ifelse(
+  name %in% c("% SRTM", "% SNTM", "% CAGE-Seq", "% Quant-Seq", "% SJ cov."),
+  "Real data",
+  ifelse(
+    name %in% c("SIRV Sensitivity", "SIRV Precision"),
+    "SIRVs",
+    ifelse(
+      name %in% c("GENCODE Sensit. (known)", "GENCODE Prec. (known)",
+                  "GENCODE Sensit. (novel)", "GENCODE Prec. (novel)"),
+      "GENCODE manual annot",
+      "Simulation"
+    )
+  )
+)) 
+
+
+top_labels <- c("Rest", "Bronze", "Silver", "Gold")
+top_shapes <- c("Rest","Top3","Top2", "Top1")
+df_pivoted_summary$Rank_top <- cut(df_pivoted_summary$Ranking_adj,
+                                   breaks = c(0,8,9,10,11),
+                                   labels = top_shapes,
+                                   include.lowest = T)
+
+
+custom_palette <- colorRampPalette(c("#F5962A", "#ECF52A"))
+top <- colorRampPalette(c("#B82D2D", "#F12626"))(3)
+bottom <- colorRampPalette(c( "#8AE826", "#5CAE05"))(3)
+
+paleta_final <- c(top, custom_palette(10), bottom)
+
+palette_top <- c("Gold"="#FDDA3A",
+                 "Silver"="#DAD8D2",
+                 "Bronze"="#CA8B2B",
+                 "Rest"="white")
+shapes_top <- c("Top1"=24,
+                 "Top2"=23,
+                 "Top3"=22,
+                 "Rest"=21)
+
+#pdf("summary_challenge1_metrics.pdf", width=9, height = 6)
+for (i in c("cDNA-PacBio", "cDNA-ONT",
+           "CapTrap-PacBio", "CapTrap-ONT",
+           "R2C2-ONT", "dRNA-ONT")){
+  
+  if (startsWith(i, "cDNA")){
+    sections <- c(4.5, 8.5, 10.5)
+  }else{
+    sections <- c(4.5, 6.5)
+  }
+  
+  p.traffic_Rank <- ggplot(df_pivoted_summary  %>% filter(Lib_Plat==i) %>% na.omit(),
+         aes(y=name, x=Data_Category))+
+    geom_point(size = 4, stroke=0.4, aes(shape=Rank_top, fill=Ranking_adj)) +  
+    geom_hline(yintercept = sections,
+               linetype="dashed", color="#0578C2") + 
+    facet_grid(Lib_Plat~Alias, drop = T, scales="free")+
+    scale_fill_gradientn(colors = paleta_final, values = rescale(c(1:12)) ,
+                          na.value = "grey50",
+                          breaks = c(2, 10), labels = c("Bottom", "Top"))  +
+    scale_shape_manual(values = shapes_top)+
+    pub_theme+
+    theme(axis.text.x = element_text(angle=0, size=8),
+          axis.text.y = element_text(size=8),
+          legend.title = element_blank(),
+          axis.title.y = element_blank(),
+          axis.title.x = element_blank())+
+    labs(colour="Ranking\n")
+  
+  
+  p.traffic_Value <- ggplot(df_pivoted_summary  %>% filter(Lib_Plat==i)%>% na.omit(),
+         aes(y=name, x=Data_Category))+
+    geom_point(size = 4, stroke=0.4, aes(shape=Rank_top, fill=value)) +  
+    geom_hline(yintercept = sections,
+               linetype="dashed", color="#0578C2") +
+    facet_grid(Lib_Plat~Alias, drop = T, scales="free")+
+    scale_fill_gradientn(colors = paleta_final, values = rescale(c(0:100)) ,
+                          na.value = "grey50",
+                          breaks = c(0.1, 0.5, 0.9))  +
+    scale_shape_manual(values=shapes_top)+
+    pub_theme+
+    theme(axis.text.x = element_text(angle=0, size=8),
+          axis.text.y = element_text(size=8),
+          legend.title = element_blank(),
+          axis.title.y = element_blank(),
+          axis.title.x = element_blank())+
+    labs(colour="Value\n")
+  
+  p.bar_summary <- ggplot(df_summary_metrics  %>% filter(Lib_Plat==i),
+         aes(y=total, x=Data_Category, fill=Tool))+
+    geom_bar(stat="identity")+
+    geom_text(aes(label=paste(round(total*0.001,digits = 0), "K")),
+              vjust=0, size=3) +
+    facet_grid(Lib_Plat~Alias, drop = T, scales="free")+
+    scale_color_gradientn(colors = paleta_final, values = rescale(c(0:100)) ,
+                          na.value = "grey50",
+                          breaks = c(0.1, 0.5, 0.9))  +
+    scale_fill_met_d("Cross")+
+    pub_theme+
+    theme(axis.text.x = element_blank(),
+          axis.ticks.x = element_blank(),
+          legend.position="none",
+          strip.text = element_blank(),
+          axis.title.x = element_blank(),
+          axis.title.y = element_text(vjust = -20) ) +
+    scale_y_continuous(label = unit_format(unit = "K", scale = 0.001, accuracy = 1),
+                       expand = expansion(mult=c(0,0.2)))+
+    labs(y="Num. transcripts")
+  
+  sum1 <- p.bar_summary / p.traffic_Value + 
+    plot_layout(heights = c(1, 3))
+  sum2 <- p.bar_summary / p.traffic_Rank + 
+    plot_layout(heights = c(1, 3))
+  
+  ggsave(file=paste0(outdir, "/summary_figure.rank.",i,".svg"), plot=sum2, width=9, height=6)
+  ggsave(file=paste0(outdir, "/summary_figure.value.",i,".svg"), plot=sum1, width=9, height=6)
+  
+  
+  #print(sum1)
+  #print(sum2)
+  
+}
+#dev.off()
