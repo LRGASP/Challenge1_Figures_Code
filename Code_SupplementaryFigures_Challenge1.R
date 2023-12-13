@@ -843,10 +843,10 @@ dev.off()
 pa_GENCODE_mouse = read.csv("Challenge1_Figures_Data/GENCODE_manualAnnot/GENCODE_mouse/presence_absence.GENCODE_loci.csv", sep=",", header = T, as.is = TRUE) [,1:51] 
 pa_GENCODE_mouse[,1] <- sapply(pa_GENCODE_mouse[,1] , function (x) paste(strsplit(x, split = "_")[[1]][-1], collapse= "_"))
 
-genocode_eval_mouse <- peformance.genecode (gencode.pa = pa_GENCODE_mouse, ID_UIC = NULL,
-                                            pa = pa.ES,  code = code, selection = NULL,
-                                            mypattern = "SQ3_mouse", evaluation = gencode_eval_results_mouse,
-                                            directory = "Challenge1_Figures_Data/GENCODE_manualAnnot/classifications/mouse/")
+genocode_eval_mouse <- performance.genecode (gencode.pa = pa_GENCODE_mouse, ID_UIC = NULL,
+                                             pa = pa.ES,  code = code, selection = NULL,
+                                             mypattern = "SQ3_mouse", evaluation = gencode_eval_results_mouse,
+                                             directory = "Challenge1_Figures_Data/GENCODE_manualAnnot/classifications/mouse/")
 
 pivoted_gencode_gene_M <- pivot_longer(genocode_eval_mouse, cols = c("Sensitivity.Genes", "Precision.Genes", "F1_score.Genes"))
 pivoted_gencode_known_M <- pivot_longer(genocode_eval_mouse , cols = c("Sensitivity_known", "Precision_known", "F1_known"))
@@ -896,11 +896,11 @@ colnames(gencode.self3) <- colnames(gencode.self2)[c(2:7)]
 
 selection <- gencode.self2[rowSums(gencode.self3) > 1,1] # UIC of manually annotated transcripts that are in more than one sample
 
-genocode_eval_WTC11.more_samples <- peformance.genecode (gencode.pa = pa_GENCODE, ID_UIC = ID_UIC,
-                                            pa = pa.WTC11,  code = code, selection = selection,
-                                            evaluation = gencode_eval_results,
-                                            mypattern = "SQ3_human",
-                                            directory = "Challenge1_Figures_Data/GENCODE_manualAnnot/classifications/human/")
+genocode_eval_WTC11.more_samples <- performance.genecode (gencode.pa = pa_GENCODE, ID_UIC = ID_UIC,
+                                                          pa = pa.WTC11,  code = code, selection = selection,
+                                                          evaluation = gencode_eval_results,
+                                                          mypattern = "SQ3_human",
+                                                          directory = "Challenge1_Figures_Data/GENCODE_manualAnnot/classifications/human/")
 
 pivoted_gencode_gene_S <- pivot_longer(genocode_eval_WTC11.more_samples, cols = c("Sensitivity.Genes", "Precision.Genes", "F1_score.Genes"))
 pivoted_gencode_known_S <- pivot_longer(genocode_eval_WTC11.more_samples, cols = c("Sensitivity_known", "Precision_known", "F1_known"))
@@ -931,7 +931,7 @@ merged.gencode3 <- unique(merged.gencode2 [,c("Row.names", "Read count (full-len
 merged.gencode3.count <- tapply(merged.gencode3$'Read count (full-length)', merged.gencode3$Row.names, sum)
 select.count <- names(merged.gencode3.count) [merged.gencode3.count > 2]
 
-genocode_eval_WTC11.more_reads <- peformance.genecode (gencode.pa = pa_GENCODE, ID_UIC = ID_UIC,
+genocode_eval_WTC11.more_reads <- performance.genecode (gencode.pa = pa_GENCODE, ID_UIC = ID_UIC,
                                                          pa = pa.WTC11,  code = code, selection = select.count ,
                                                          evaluation = gencode_eval_results,
                                                          mypattern = "SQ3_human",
@@ -961,11 +961,11 @@ dev.off()
 ## Extended Data Fig.51. Boxplox summary performance for Library preparations (WTC11)
 #########################################################################################
 
-genocode_eval_WTC11 <- peformance.genecode (gencode.pa = pa_GENCODE, ID_UIC = NULL,
-                                            pa = pa.WTC11,  code = code, 
-                                            selection = NULL, evaluation = gencode_eval_results,
-                                            mypattern = "SQ3_human",
-                                            directory = "Challenge1_Figures_Data/GENCODE_manualAnnot/classifications/human/")
+genocode_eval_WTC11 <- performance.genecode (gencode.pa = pa_GENCODE, ID_UIC = NULL,
+                                             pa = pa.WTC11,  code = code, 
+                                             selection = NULL, evaluation = gencode_eval_results,
+                                             mypattern = "SQ3_human",
+                                             directory = "Challenge1_Figures_Data/GENCODE_manualAnnot/classifications/human/")
 
 
 all.labs <- unique(code$Lab)
