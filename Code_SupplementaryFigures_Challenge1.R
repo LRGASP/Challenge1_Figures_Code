@@ -6,7 +6,7 @@
 ## Last modified: March 16th 2023
 #####################################################
 
-outdir = "output/extended"
+outdir <- "output/extended"
 dir.create(outdir, recursive=TRUE, showWarnings=FALSE)
 
 ###############
@@ -115,7 +115,7 @@ figureS4 <- ggarrange(W$A,H$A,E$A, W$B,H$B,E$B,
                     ncol = 3, nrow = 2, common.legend = TRUE, legend="bottom") +
   theme(plot.margin = margin(0.5,0.5,0.5,0.5, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Relationship between sequencing depth and number of detected features. a-c) Transcripts, \n     d-f) Genes.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_seq-depth-by-detected-features",".pdf"))
 annotate_figure(figureS4,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -131,7 +131,7 @@ figureS5 <- ggarrange(W1$A,H1$A,E1$A, W1$B,H1$B,E1$B,
                     ncol = 3, nrow = 2, common.legend = TRUE, legend="bottom") +
   theme(plot.margin = margin(0.5,0.5,0.5,0.5, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Relationship between read length and number of detected features. a-c) Transcripts, \n     d-f) Genes.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_read-length-by-detected-features",".pdf"))
 annotate_figure(figureS5,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -147,7 +147,7 @@ figureS6 <- ggarrange(W2$A,H2$A,E2$A, W2$B,H2$B,E2$B,
                     ncol = 3, nrow = 2, common.legend = TRUE, legend="bottom") +
   theme(plot.margin = margin(0.5,0.5,0.5,0.5, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Relationship between read quality and number of detected features. a-c) Transcripts, \n     d-f) Genes.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_read-qual-by-detected-features",".pdf"))
 annotate_figure(figureS6,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -166,7 +166,7 @@ figureS7 <- ggarrange(S7W1,S7H1,S7E1, S7W2,S7H2,S7E2,
                      ncol = 3, nrow = 2, common.legend = TRUE, legend="bottom") +
   theme(plot.margin = margin(0.5,0.5,0.5,0.5, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Median Absolute Deviance of detected features by experimental factor. a-c) Transcripts, \n     d-f) Genes.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl, "_deviance-dectected-features-by-expr-factors",".pdf"))
 annotate_figure(figureS7,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -185,7 +185,7 @@ figureS8 <- ggarrange(S8W2,S8H2,S8E2, S8W1,S8H1,S8E1,
                       ncol = 3, nrow = 2, common.legend = TRUE, legend="bottom") +
   theme(plot.margin = margin(0.5,0.5,0.5,0.5, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Number of detected transcripts and genes per analysis tool.  a-c) Transcripts, d-f) Genes.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_detected-trans-gene-by-tool", ".pdf"))
 annotate_figure(figureS8,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -213,7 +213,7 @@ figureS92 <- ggarrange( S9W2,S9H2,S9E2,
 figureS9 <- ggarrange ( figureS91, figureS92, ncol = 1, nrow = 2) + theme(plot.margin = margin(0.5,0.5,0.5,0.5, "cm")) 
 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Number of detected genes per Platform and Library Preparation. a-c) Platform, \n     d-f) Library Preparation.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_detected-genes-by-plat-prep",".pdf"))
 annotate_figure(figureS9,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -237,7 +237,7 @@ figureS102 <- ggarrange( S10W2,S10H2,S10E2,
 figureS10 <- ggarrange ( figureS101, figureS102, ncol = 1, nrow = 2) + theme(plot.margin = margin(0.5,0.5,0.5,0.5, "cm")) 
 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Number of detected transcripts per Platform and Library Preparation. a-c) Platform, \n     d-f) Library Preparation.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_detected-genes-by-plat-prep",".pdf"))
 annotate_figure(figureS10,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -258,7 +258,7 @@ figureS11 <- ggarrange(S11W1,S11H1,S11E1, S11W2,S11H2,S11E2,
                       ncol = 3, nrow = 2, common.legend = TRUE, legend="bottom") +
   theme(plot.margin = margin(0.5,0.5,0.5,0.5, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Number of detected transcripts in cDNA and CapTrap libraries. a-c) cDNA, d-f) CapTrap.") 
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_detected-trans-by-cDNA-CapTrap",".pdf"))
 annotate_figure(figureS11,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -284,7 +284,7 @@ figureS122 <- ggarrange( S11W4,S11H4,S11E4,
 figureS12 <- ggarrange ( figureS121, figureS122, ncol = 1, nrow = 2) + theme(plot.margin = margin(0.5,0.5,0.5,0.5, "cm")) 
 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Number of detected transcripts in PacBio and Nanopore platforms. a-c) PacBio, d-f) Nanopore.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_detected-trans-by-PacBio-ONT",".pdf"))
 annotate_figure(figureS12,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -304,7 +304,7 @@ figureS13 <- ggarrange(S13W1,S13H1,S13E1, S13W2,S13H2,S13E2,
                        ncol = 3, nrow = 2, common.legend = TRUE, legend="bottom") +
   theme(plot.margin = margin(0.5,0.5,0.5,0.5, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Number of detected genes in cDNA and CapTrap libraries. a-c) cDNA, d-f) CapTrap.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_detected-genes-by-PacBio-ONT",".pdf"))
 annotate_figure(figureS13,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -331,7 +331,7 @@ figureS14 <- ggarrange ( figureS141, figureS142, ncol = 1, nrow = 2) + theme(plo
 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Number of detected genes in PacBio and Nanopore platforms. a-c) PacBio, d-f) Nanopore.")
 
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_detected-genes-by-PacBio-ONT",".pdf"))
 annotate_figure(figureS14,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -351,7 +351,7 @@ figureS15 <- ggarrange(S15W1,S15H1,S15E1, S15W2,S15H2,S15E2,
                        ncol = 3, nrow = 2, common.legend = TRUE, legend="bottom") +
   theme(plot.margin = margin(0.5,0.5,0.5,0.5, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Number of FSM and ISM by sequencing platform and library preparation. a-c) FSM, d-f) ISM.") 
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_FSM-ISM-by-plat-lib",".pdf"))
 annotate_figure(figureS15,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -371,7 +371,7 @@ figureS16 <- ggarrange(S16W1,S16H1,S16E1, S16W2,S16H2,S16E2,
                        ncol = 3, nrow = 2, common.legend = TRUE, legend="bottom") +
   theme(plot.margin = margin(0.5,0.5,0.5,0.5, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Number of NIC and NNC by sequencing platform and library preparation. a-c) NIC, d-f) NNC.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_NIC-NCC-by-plat-prep",".pdf"))
 annotate_figure(figureS16,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -391,7 +391,7 @@ figureS17 <- ggarrange(S17W1,S17H1,S17E1, S17W2,S17H2,S17E2,
                        ncol = 3, nrow = 2, common.legend = TRUE, legend="bottom") +
   theme(plot.margin = margin(0.5,0.5,0.5,0.5, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Number of FSM transcripts by library preparation and analysis tool. a-c) cDNA. d-f) CapTrap.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_FSM-by-lib-tool",".pdf"))
 annotate_figure(figureS17,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -411,7 +411,7 @@ figureS18 <- ggarrange(S18W1,S18H1,S18E1, S18W2,S18H2,S18E2,
                        ncol = 3, nrow = 2, common.legend = TRUE, legend="bottom") +
   theme(plot.margin = margin(0.5,0.5,0.5,0.5, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Number of FSM transcripts by sequencing platform and analysis tool. a-c) PacBio, \n     d-f) Nanopore.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_FSM-by-plat-tool",".pdf"))
 annotate_figure(figureS18,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -431,7 +431,7 @@ figureS19 <- ggarrange(S19W1,S19H1,S19E1,S19W2,S19H2,S19E2,
                        ncol = 3, nrow = 2, common.legend = TRUE, legend="bottom") +
   theme(plot.margin = margin(0.5,0.5,0.5,0.5, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Number of ISM transcripts by library preparation and analysis tool. a-c) cDNA. d-f) CapTrap.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_ISM-by-prep-tool",".pdf"))
 annotate_figure(figureS19,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -451,7 +451,7 @@ figureS20 <- ggarrange(S19W1,S19H1,S19E1,S19W2,S19H2,S19E2,
                        ncol = 3, nrow = 2, common.legend = TRUE, legend="bottom") +
 theme(plot.margin = margin(0.5,0.5,0.5,0.5, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Number of ISM transcripts by sequencing platform and analysis tool. a-c) Intergenic. \n     d-f) GenicGenomic.") 
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_ISM-by-plat-tool",".pdf"))
 annotate_figure(figureS20,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -471,7 +471,7 @@ figureS21 <- ggarrange(S22W1,S22H1,S22E1, S22W2,S22H2,S22E2,
                          ncol = 3, nrow = 2, common.legend = TRUE, legend="bottom") +
    theme(plot.margin = margin(0.5,0.5,0.5,0.5, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Number of Intergenic and GenicGenomic by sequencing platform and library preparation. \n     a-c) Intergenic, d-f) GenicGenomic.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_genic-by-plat-prep",".pdf"))
 annotate_figure(figureS21,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
   
@@ -491,7 +491,7 @@ figureS22 <- ggarrange(S23W1,S23H1,S23E1, S23W2,S23H2,S23E2,
                          ncol = 3, nrow = 2, common.legend = TRUE, legend="bottom") +
   theme(plot.margin = margin(0.5,0.5,0.5,0.5, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Number of Fusion and Antisense by sequencing platform and library preparation. \n     a-c) Fusion. d-f) Antisense.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_fusion-anti-by-plat-prep",".pdf"))
 annotate_figure(figureS22,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -507,7 +507,7 @@ figureS23 <- ggarrange(S23A,S23B,S23C,
                          ncol = 1, nrow = 3, common.legend = TRUE, legend = "bottom") +
   theme(plot.margin = margin(0.2,0.5,0.2,0.5, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Percentage of transcript models (TM) with different ranges of sequence coverage by long reads.\n     a) WTC11. c) H1-mix. c) Mouse ES. Ba: Bambu, FM: FLAMES, FL: FLAIR, IQ: IsoQuant, IT: IsoTools, IB: Iso_IB, Ly: LyRic, \n     Ma: Mandalorion, TL: TALON-LAPA, Sp: Spectra, ST: StringTie2.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_TMs-coverage-by-tool",".pdf"))
 annotate_figure(figureS23,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
   
@@ -523,7 +523,7 @@ figureS24 <- ggarrange(S24A$h,S24B$h,S24C$h, as_ggplot(get_legend(S24A$h)),
                        ncol = 2, nrow = 2, legend = "none") +
   theme(plot.margin = margin(0.2,0.1,0.2,0.1, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Distribution of Biotypes across pipelines. a) WTC11, c) H1-mix, c) Mouse ES.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_biotype-by-tool",".pdf"))
 annotate_figure(figureS24,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -535,7 +535,7 @@ figureS25 <- ggarrange(S24A$q,S24B$q,S24C$q, as_ggplot(get_legend(S24A$q)),
                        ncol = 2, nrow = 2, legend = "none") +
   theme(plot.margin = margin(0.2,0.1,0.2,0.1, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Biotypes per pipeline. a) WTC11, c) H1-mix, c) Mouse ES.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_biotype-per-pipeline",".pdf"))
 annotate_figure(figureS25,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -550,7 +550,7 @@ figureS26 <- ggarrange(S26A ,S26B,
   theme(plot.margin = margin(0.2,0.1,0.2,0.1, "cm")) 
 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Number and SQANTI category distribution of Unique Intron Chain (UIC) consistently detected by\n     an increasing number of submissions. a) H1-mix sample, b) Mouse ES sample.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_cnt_squanti_dist-UIC",".pdf"))
 annotate_figure(figureS26,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -574,7 +574,7 @@ figureS30 <- ggarrange(S30A$h,S30B$h,S30C$h,
                        ncol = 1, nrow = 3, common.legend = TRUE, legend = "bottom") +
   theme(plot.margin = margin(0.2,0.2,0.2,0.2, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Number of UIC detected by a tool and shared with an increasing number of other tools, \n     processing ", paste(subset, collapse = "_"), " data. a) WTC11, c) H1-mix, c) Mouse ES.") 
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl, "_UIC-by-tool-",paste(subset, collapse = "_"), ".pdf"))
 annotate_figure(figureS30,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -591,7 +591,7 @@ figureS31 <- ggarrange(S31A$h,S31B$h,S31C$h,
                        ncol = 1, nrow = 3, common.legend = TRUE, legend = "bottom") +
   theme(plot.margin = margin(0.2,0.2,0.2,0.2, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Number of UIC detected by a tool and shared with an increasing number of other tools, \n     processing ", paste(subset, collapse = "_"), " data. a) WTC11, c) H1-mix, c) Mouse ES.") 
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_UIC-by-tool-",paste(subset, collapse = "_"), ".pdf"))
 annotate_figure(figureS31,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -607,7 +607,8 @@ figureS32 <- ggarrange(S32A$h,S32B$h,S32C$h,
                        labels = c( "a)", "b)", "c)"),
                        ncol = 1, nrow = 3, common.legend = TRUE, legend = "bottom") +
   theme(plot.margin = margin(0.2,0.2,0.2,0.2, "cm")) 
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+mylegend <- paste0("     Extended Data Fig. ", suppl, ". Biotypes per pipeline. a) WTC11, c) H1-mix, c) Mouse ES.")
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_UIC-by-tool-",paste(subset, collapse = "_"), ".pdf"))
 annotate_figure(figureS32,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -624,7 +625,7 @@ figureS33 <- ggarrange(S33A$h,S33B$h,S33C$h,
                        ncol = 1, nrow = 3, common.legend = TRUE, legend = "bottom") +
   theme(plot.margin = margin(0.2,0.2,0.2,0.2, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Number of UIC detected by a tool and shared with an increasing number of other tools, \n     processing ", paste(subset, collapse = "_"), " data. a) WTC11, c) H1-mix, c) Mouse ES.") 
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_UIC-by-tool-",paste(subset, collapse = "_"),".pdf"))
 annotate_figure(figureS33,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -641,7 +642,7 @@ figureS34 <- ggarrange(S34A$h,S34B$h,S34C$h,
                        ncol = 1, nrow = 3, common.legend = TRUE, legend = "bottom") +
   theme(plot.margin = margin(0.2,0.2,0.2,0.2, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Number of UIC detected by a tool and shared with an increasing number of other tools, \n     processing ", paste(subset, collapse = "_"), " data. a) WTC11, c) H1-mix, c) Mouse ES") 
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_UIC-by-tool-",paste(subset, collapse = "_"),".pdf"))
 annotate_figure(figureS34,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -658,7 +659,7 @@ figureS35 <- ggarrange(S35A$h,S35B$h,S35C$h,
                        ncol = 1, nrow = 3, common.legend = TRUE, legend = "bottom") +
   theme(plot.margin = margin(0.2,0.2,0.2,0.2, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Number of UIC detected by a tool and shared with an increasing number of other tools, \n     processing ", paste(subset, collapse = "_"), " data. a) WTC11, c) H1-mix, c) Mouse ES") 
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_UIC-by-tool-",paste(subset, collapse = "_"),".pdf"))
 annotate_figure(figureS35,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -670,7 +671,7 @@ figureS36 <- ggarrange(S30A$j,S30B$j,S30C$j,
                        ncol = 1, nrow = 3, common.legend = TRUE, legend = "bottom") +
   theme(plot.margin = margin(0.2,0.2,0.2,0.2, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Number of UIC consistently detected by a tool across samples.  \n     a) WTC11, c) H1-mix, c) Mouse ES") 
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_UIC-by-tool-sample",".pdf"))
 annotate_figure(figureS36,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -712,7 +713,7 @@ figureS38 <- ggarrange(S38AW[[1]], S38AW[[2]],S38AW[[3]],
                        ncol = 3, nrow = 3, common.legend = TRUE, legend = "bottom") +
   theme(plot.margin = margin(0.2,0.2,0.2,0.2, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Properties of detected transcripts by library preparation. \n     a,d,g) Length distribution. b,e,h) Exon number distribution. c,f,i) Counts per million")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_trans-prop-by-prep",".pdf"))
 annotate_figure(figureS38,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()  
 
@@ -729,8 +730,8 @@ figureS39 <- ggarrange(S39AW[[1]], S39AW[[2]],S39AW[[3]],
                        labels = c( "a)", "b)", "c)","d)", "e)", "f)","g)", "h)", "i)"),
                        ncol = 3, nrow = 3, common.legend = TRUE, legend = "bottom") +
   theme(plot.margin = margin(0.2,0.2,0.2,0.2, "cm")) 
-mylegend <- paste0("     Extended Data Fig. ", suppl, ". Properties of detected transcripts by library preparation. \n     a,d,g) Length distribution. b,e,h) Exon number distribution. c,f,i) Counts per million")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+mylegend <- paste0("     Extended Data Fig. ", suppl, ". Properties of detected transcripts by platform. \n     a,d,g) Length distribution. b,e,h) Exon number distribution. c,f,i) Counts per million")
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_trans-prop-by-plat",".pdf"))
 annotate_figure(figureS39,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -748,7 +749,7 @@ figureS40 <- ggarrange(S40AW[[1]], S40AW[[2]],S40AW[[3]],
                        ncol = 3, nrow = 3, common.legend = TRUE, legend = "bottom") +
   theme(plot.margin = margin(0.2,0.2,0.2,0.2, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Properties of detected transcripts by experimental protocol. \n     a,d,g) Length distribution. b,e,h) Exon number distribution. c,f,i) Counts per million")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_trans-by-protocol",".pdf"))
 annotate_figure(figureS40,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -765,7 +766,7 @@ figureS41 <- ggarrange(S41A, S41B, S41C,
                        ncol = 1, nrow = 3, common.legend = TRUE, legend = "bottom") +
   theme(plot.margin = margin(0.2,0.2,0.2,0.2, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Distribution of transcript length by analysis tool.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_trans-len-by-tool",".pdf"))
 annotate_figure(figureS41,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -777,7 +778,8 @@ dev.off()
 suppl = "43"
 text = "Extended Data Fig.43. Performance metrics on mouse simulated data. Sen_kn: sensitivity known transcripts, \nSen_kn > 5TMP: sensitivity known transcripts with expression > 5 TPM, Pre_kn: precision known transcripts,
 Sen_no: sensitivity novel transcripts, Pre_no: precision novel transcripts, 1/Red: inverse of redundancy."
-radar.simulation (species = "mouse", directory = "Challenge1_Figures_Data/Simulations/", pdf = paste0(outdir, "/Extended_Fig._43"), text = text, a = 0.05)
+radar.simulation (species = "mouse", directory = "Challenge1_Figures_Data/Simulations/",
+                  pdf = paste0(outdir, "/Extended_Fig._43", "_metrics-mouse-simul"), text = text, a = 0.05)
 
 ## Extended Data Fig.44. Coverage simulated data
 ####################################################
@@ -804,7 +806,7 @@ figureS44 <- ggarrange(S44A, S44B, S44C, S44D,
                        ncol = 2, nrow = 2, common.legend = TRUE, legend = "bottom") +
   theme(plot.margin = margin(0.2,0.2,0.2,0.2, "cm")) 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Comparison of long-read transcript coverage between real and simulated datasets.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl, "_trans-cover-real-simul",".pdf"))
 annotate_figure(figureS44,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -819,7 +821,7 @@ figureS45 <- ggarrange(ggarrange(S45$A, S45$B, ncol = 2, labels = c("a)", "b)"))
 ) 
 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Properties of GENCODE manually annotated loci for WTC11 sample.a) Distributon of gene \n     expression. b) Distribution of SQANTI categories. c) Intersection of Unique Intron Chains (UIC) among experimental \n     protocols.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_gencode-manual-props-wtc11",".pdf"))
 annotate_figure(figureS45,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -834,7 +836,7 @@ figureS46 <- ggarrange(ggarrange(S46$A, S46$B, ncol = 2, labels = c("a)", "b)"))
 ) 
 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Properties of GENCODE manually annotated loci for mouse ES sample.a) Distributon of gene \n     expression. b) Distribution of SQANTI categories. c) Intersection of Unique Intron Chains (UIC) among experimental \n     protocols.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_gencode-manual-props-es",".pdf"))
 annotate_figure(figureS46,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -865,7 +867,7 @@ suppl = "47"
 figureS47 <- ggarrange(pC.gene.left, pC.known.mid,  pC.novel, labels = c("", "", ""),
                       ncol = 3, nrow = 1, common.legend = TRUE)
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Performance metrics of LRGASP pipelines evaluate against GENCODE manual annotation \n     of mouse ES sample. Ba: Bambu, FM: Flames, FR: FLAIR, IQ: IsoQuant, IT: IsoTools, IB: Iso_IB, Ly: LyRic, \n     Ma: Mandalorion, TL: TALON-LAPA, Sp: Spectra, ST: StringTie2."  )
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_pipeline-by-gencode-manual",".pdf"))
 annotate_figure(figureS47,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -875,7 +877,7 @@ pC.TP <- Performance_plot_TP(pivoted_gencode_M_TP , main = "Number of detected t
 
 suppl = "48"
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Detection of Unique Intron Chains (UIC) at GENCODE manual annotation loci. Ba: Bambu, \n     FM: Flames, FL: FLAIR, IQ: IsoQuant, IT: IsoTools, IB: Iso_IB, Ly: LyRic, Ma: Mandalorion, TL: TALON-LAPA,\n     Sp: Spectra, ST: StringTie2."  )
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_uic-gencode-manual-by-tool",".pdf"))
 annotate_figure(pC.TP,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()  # for some reason the pdf includes one empty page. Delete from pdf itself.
 
@@ -918,7 +920,7 @@ figureS49 <- ggarrange(pC.known.S, pC.novel.S, labels = c("", ""),
                       ncol = 2, nrow = 1, common.legend = TRUE)
 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Performance on GENCODE manually curated data. Curated transcripts selected to be present \n     in at least two experimental datasets. Ba: Bambu, FM: Flames, FL: FLAIR, IQ: IsoQuant, IT: IsoTools, IB: Iso_IB,  \n     Ly: LyRic, Ma: Mandalorion, TL: TALON-LAPA, Sp: Spectra, ST: StringTie2.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_gencode-manual-by-tool-two-datasets",".pdf"))
 annotate_figure(figureS49,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -954,7 +956,7 @@ figureS50 <- ggarrange(pC.known.R , pC.novel.R, labels = c("", ""),
                        ncol = 2, nrow = 1, common.legend = TRUE)
 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Performance on GENCODE manually curated data. The ground truth is the set of manually\n     annotated transcripts with more than two reads. Ba: Bambu, FM: Flames, FL: FLAIR, IQ: IsoQuant, IT: IsoTools,\n     IB: Iso_IB, Ly: LyRic, Ma: Mandalorion, TL: TALON-LAPA, Sp: Spectra, ST: StringTie2.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_gencode-manual-by-tool-three-reads",".pdf"))
 annotate_figure(figureS50,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -993,7 +995,7 @@ figureS51 <- ggarrange(A,B,C,D,A2,B2,C2,D2, labels = c("a)", "b)", "c)", "d)", "
                        ncol = 4, nrow = 2, common.legend = TRUE)
 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Performance on GENCODE manually curated data by Library Preparation.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_gencode-manual-by-prep",".pdf"))
 annotate_figure(figureS51,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
@@ -1020,7 +1022,7 @@ figureS52 <- ggarrange(A,B,C,D,A2,B2,C2,D2, labels = c("a)", "b)", "c)", "d)", "
                        ncol = 4, nrow = 2, common.legend = TRUE)
 
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Performance on GENCODE manually curated data by Platform.")
-pdf(paste0(outdir, "/Extended_Fig._",suppl,".pdf"))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_gencode-manual-by-plat",".pdf"))
 annotate_figure(figureS52,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
 dev.off()
 
