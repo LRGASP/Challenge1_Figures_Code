@@ -56,10 +56,10 @@ plots_depths <- map(depths, plot_depths)
 for (j in c("PacBio_cDNA", "PacBio_CapTrap","ONT_cDNA", "ONT_CapTrap", "ONT_R2C2","ONT_dRNA")){
   # convention is prep followed by method
   parts <- strsplit(j, "_")
-  method <- parts[[1]][1]
+  plat <- parts[[1]][1]
   prep <- parts[[1]][2]
-  pdf(paste0(outdir, "/", "sirv-cover-", prep, "_", method, ".pdf"))
-  print(plots_depths[[j]]+ggtitle(paste0(prep, "-", method)))
+  pdf(paste0(outdir, "/", "sirv-cover-", prep, "_", plat, ".pdf"))
+  print(plots_depths[[j]]+ggtitle(paste0(prep, "-", plat)))
   dev.off()
 }
 
