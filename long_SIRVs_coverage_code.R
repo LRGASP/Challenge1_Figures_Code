@@ -1,5 +1,3 @@
-
-setwd("SIRV_coverage_code/")
 library(ggplot2)
 library(scales)
 library(ggpubr)
@@ -7,6 +5,10 @@ library(tidyr)
 library(dplyr)
 library(purrr)
 library(stringr)
+
+outdir = "output/sirvs"
+dir.create(outdir, recursive=TRUE, showWarnings=FALSE)
+
 
 pub_theme <- theme_pubclean(base_family = "Helvetica") +
   theme(axis.line.x = element_line(color="black", size = 0.4),
@@ -24,7 +26,7 @@ pub_theme <- theme_pubclean(base_family = "Helvetica") +
 
 depths <- list()
 for (i in c("PacBio_cDNA", "PacBio_CapTrap","ONT_cDNA", "ONT_CapTrap", "ONT_R2C2","ONT_dRNA")){
-  depths[[i]] <- read.csv(paste0(i,".depth.tsv"), sep="\t", header=F)
+  depths[[i]] <- read.csv(paste0("Challenge1_Figures_Data/SIRV-coverage/",i,".depth.tsv"), sep="\t", header=F)
 }
 
 
@@ -51,13 +53,12 @@ plot_depths <- function(x){
 
 plots_depths <- map(depths, plot_depths)
 
-pdf("Coverage_SIRVs.pdf")
-
 for (j in c("PacBio_cDNA", "PacBio_CapTrap","ONT_cDNA", "ONT_CapTrap", "ONT_R2C2","ONT_dRNA")){
+  pdf(paste0(outdir, "/", "sirv-cover-", j, ".pdf"))
   print(plots_depths[[j]]+ggtitle(j))
+  dev.off()
 }
 
-dev.off()
 
 #### Idea to put all in the same plot
 
@@ -121,5 +122,5 @@ p.all_sirvs.cov <- ggplot(all_depths, aes(x=V2, y=V3, color = V1, group=V1))+
   guides(color=guide_legend(nrow=2))
 
 
-ggsave("Coverage_all_SIRVs.steps.svg", p.all_sirvs.mean, width = 12, height = 7)
-ggsave("Coverage_all_SIRVs.cov.svg", p.all_sirvs.cov, width = 12, height = 7)
+ggsave(paste0(outdir, "/", "Coverage_all_SIRVs.steps.svg"), p.all_sirvs.mean, width = 12, height = 7)
+ggsave(paste0(outdir, "/", "Coverage_all_SIRVs.cov.svg"), p.all_sirvs.cov, width = 12, height = 7)
