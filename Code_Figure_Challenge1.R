@@ -370,7 +370,7 @@ shapes_top <- c("Top1"=24,
                  "Top3"=22,
                  "Rest"=21)
 
-#pdf("summary_challenge1_metrics.pdf", width=9, height = 6)
+pdf(paste0(outdir,"/summary_challenge1_metrics.pdf"), width=9, height = 6)
 for (i in c("cDNA-PacBio", "cDNA-ONT",
            "CapTrap-PacBio", "CapTrap-ONT",
            "R2C2-ONT", "dRNA-ONT")){
@@ -387,9 +387,10 @@ for (i in c("cDNA-PacBio", "cDNA-ONT",
     geom_hline(yintercept = sections,
                linetype="dashed", color="#0578C2") + 
     facet_grid(Lib_Plat~Alias, drop = T, scales="free")+
-    scale_fill_gradientn(colors = paleta_final, values = rescale(c(1:12)) ,
-                          na.value = "grey50",
-                          breaks = c(2, 10), labels = c("Bottom", "Top"))  +
+    scale_fill_viridis(breaks = c(2, 10), labels = c("Bottom", "Top"))+
+    #scale_fill_gradientn(colors = paleta_final, values = rescale(c(1:12)) ,
+    #                      na.value = "grey50",
+    #                      breaks = c(2, 10), labels = c("Bottom", "Top"))  +
     scale_shape_manual(values = shapes_top)+
     pub_theme+
     theme(axis.text.x = element_text(angle=0, size=8),
@@ -406,9 +407,10 @@ for (i in c("cDNA-PacBio", "cDNA-ONT",
     geom_hline(yintercept = sections,
                linetype="dashed", color="#0578C2") +
     facet_grid(Lib_Plat~Alias, drop = T, scales="free")+
-    scale_fill_gradientn(colors = paleta_final, values = rescale(c(0:100)) ,
-                          na.value = "grey50",
-                          breaks = c(0.1, 0.5, 0.9))  +
+    scale_fill_viridis(breaks = c(0.1, 0.5, 0.9))  +
+    #scale_fill_gradientn(colors = paleta_final, values = rescale(c(0:100)) ,
+    #                      na.value = "grey50",
+    #                      breaks = c(0.1, 0.5, 0.9))  +
     scale_shape_manual(values=shapes_top)+
     pub_theme+
     theme(axis.text.x = element_text(angle=0, size=8),
@@ -444,12 +446,12 @@ for (i in c("cDNA-PacBio", "cDNA-ONT",
   sum2 <- p.bar_summary / p.traffic_Rank + 
     plot_layout(heights = c(1, 3))
   
-  ggsave(file=paste0(outdir, "/summary_figure.rank.",i,".svg"), plot=sum2, width=9, height=6)
-  ggsave(file=paste0(outdir, "/summary_figure.value.",i,".svg"), plot=sum1, width=9, height=6)
+  #ggsave(file=paste0(outdir, "/summary_figure.rank.",i,".svg"), plot=sum2, width=9, height=6)
+  #ggsave(file=paste0(outdir, "/summary_figure.value.",i,".svg"), plot=sum1, width=9, height=6)
   
   
-  #print(sum1)
-  #print(sum2)
+  print(sum1)
+  print(sum2)
   
 }
-#dev.off()
+dev.off()
