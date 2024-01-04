@@ -21,6 +21,7 @@ Run the R programs to build figures into the `output` directory:
 unzip -q Challenge1_Figures_Data.zip
 Rscript Code_Figure_Challenge1.R
 Rscript Code_SupplementaryFigures_Challenge1.R
+Rscript long_SIRVs_coverage_code.R
 ```
 
 
