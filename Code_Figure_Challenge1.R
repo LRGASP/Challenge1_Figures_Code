@@ -38,46 +38,6 @@ library(fmsb)
 outdir = "output/main"
 dir.create(outdir, recursive=TRUE, showWarnings=FALSE)
 
-# PATTERNS
-#################
-
-pub_theme <- theme_pubclean(base_family = "Helvetica") +
-  theme(axis.line.x = element_line(color="black", size = 0.4),
-        axis.line.y = element_line(color="black", size = 0.4)) +
-  theme(axis.title.x = element_text(size=13),
-        axis.text.x  = element_text(size=13),
-        axis.title.y = element_text(size=13),
-        axis.text.y  = element_text(vjust=0.5, size=13) ) +
-  theme(legend.text = element_text(size = 10), legend.title = element_text(size=10), legend.key.size = unit(0.5, "cm")) +
-  theme(plot.title = element_text(lineheight=.4, size=15.5)) +
-  theme(plot.margin = unit(c(0.5,0.5,0.5,0.5), "cm")) +
-  theme(legend.position = "bottom")
-
-pub_theme_flip <- theme_pubclean(base_family = "Helvetica", flip=T) +
-  theme(axis.line.x = element_line(color="black", size = 0.4),
-        axis.line.y = element_line(color="black", size = 0.4)) +
-  theme(axis.title.x = element_text(size=13),
-        axis.text.x  = element_text(size=13),
-        axis.title.y = element_text(size=13),
-        axis.text.y  = element_text(vjust=0.5, size=13) ) +
-  theme(legend.text = element_text(size = 10), legend.title = element_text(size=10), legend.key.size = unit(0.5, "cm")) +
-  theme(plot.title = element_text(lineheight=.4, size=15.5)) +
-  theme(plot.margin = unit(c(0.5,0.5,0.5,0.5), "cm")) +
-  theme(legend.position = "bottom")
-
-
-old.libplat.palette = c( "cDNA-PacBio"="#e66adb", "CapTrap-PacBio"="#ab0202", "cDNA-Illumina"="#FFCF71",  "Freestyle-Freestyle"="#75b562",
-                         "cDNA-ONT"="#005C75", "CapTrap-ONT"="#7482F0", "R2C2-ONT"="#74CDF0", "dRNA-ONT"="#1b36d1"
-)
-
-libplat.palette = c( "cDNA-PacBio"="#c06636", "CapTrap-PacBio"="#802417", "cDNA-Illumina"="#e8b960",  "Freestyle-Freestyle"="#ce9344",
-                     "cDNA-ONT"="#646e3b", "CapTrap-ONT"="#17486f", "R2C2-ONT"="#508ea2", "dRNA-ONT"="#2b5851"
-)
-
-cat.palette = c( "FSM"="#6BAED6", "ISM"="#FC8D59", "NIC"="#78C679", 
-                 "NNC"="#EE6A50", "GenicGenomic"="#969696", "Antisense"="#66C2A4", "Fusion"="goldenrod1",
-                 "Intergenic" = "darksalmon", "GenicIntron"="#41B6C4")
-
 # FUNCTIONS
 #################
 source("Functions_Supplementary_Figures_Challenge1_v4.R")
