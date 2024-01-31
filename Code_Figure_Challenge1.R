@@ -38,6 +38,46 @@ library(fmsb)
 outdir = "output/main"
 dir.create(outdir, recursive=TRUE, showWarnings=FALSE)
 
+# PATTERNS
+#################
+
+pub_theme <- theme_pubclean(base_family = "Helvetica") +
+  theme(axis.line.x = element_line(color="black", size = 0.4),
+        axis.line.y = element_line(color="black", size = 0.4)) +
+  theme(axis.title.x = element_text(size=13),
+        axis.text.x  = element_text(size=13),
+        axis.title.y = element_text(size=13),
+        axis.text.y  = element_text(vjust=0.5, size=13) ) +
+  theme(legend.text = element_text(size = 10), legend.title = element_text(size=10), legend.key.size = unit(0.5, "cm")) +
+  theme(plot.title = element_text(lineheight=.4, size=15.5)) +
+  theme(plot.margin = unit(c(0.5,0.5,0.5,0.5), "cm")) +
+  theme(legend.position = "bottom")
+
+pub_theme_flip <- theme_pubclean(base_family = "Helvetica", flip=T) +
+  theme(axis.line.x = element_line(color="black", size = 0.4),
+        axis.line.y = element_line(color="black", size = 0.4)) +
+  theme(axis.title.x = element_text(size=13),
+        axis.text.x  = element_text(size=13),
+        axis.title.y = element_text(size=13),
+        axis.text.y  = element_text(vjust=0.5, size=13) ) +
+  theme(legend.text = element_text(size = 10), legend.title = element_text(size=10), legend.key.size = unit(0.5, "cm")) +
+  theme(plot.title = element_text(lineheight=.4, size=15.5)) +
+  theme(plot.margin = unit(c(0.5,0.5,0.5,0.5), "cm")) +
+  theme(legend.position = "bottom")
+
+
+old.libplat.palette = c( "cDNA-PacBio"="#e66adb", "CapTrap-PacBio"="#ab0202", "cDNA-Illumina"="#FFCF71",  "Freestyle-Freestyle"="#75b562",
+                         "cDNA-ONT"="#005C75", "CapTrap-ONT"="#7482F0", "R2C2-ONT"="#74CDF0", "dRNA-ONT"="#1b36d1"
+)
+
+libplat.palette = c( "cDNA-PacBio"="#c06636", "CapTrap-PacBio"="#802417", "cDNA-Illumina"="#e8b960",  "Freestyle-Freestyle"="#ce9344",
+                     "cDNA-ONT"="#646e3b", "CapTrap-ONT"="#17486f", "R2C2-ONT"="#508ea2", "dRNA-ONT"="#2b5851"
+)
+
+cat.palette = c( "FSM"="#6BAED6", "ISM"="#FC8D59", "NIC"="#78C679", 
+                 "NNC"="#EE6A50", "GenicGenomic"="#969696", "Antisense"="#66C2A4", "Fusion"="goldenrod1",
+                 "Intergenic" = "darksalmon", "GenicIntron"="#41B6C4")
+
 # FUNCTIONS
 #################
 source("Functions_Supplementary_Figures_Challenge1_v4.R")
@@ -76,8 +116,10 @@ pivoted_spliced <- pivot_longer(spliced_SIRV_metrics,
 pivoted_spliced$metrics  <- pivoted_spliced$metrics %>% factor(levels = c("Sensitivity","Precision", "F1 score"),
                                                                labels = c("Sensitivity","Precision", "F1 score"))
 
-pSIRVspliced <- ggplot(pivoted_spliced, aes(x=Label, y=value)) +
-  geom_segment( aes(x=Label, xend=Label, y=0, yend=value, color=Lib_Plat), size=0.8) +
+pivoted_spliced$full_Label <- paste0(pivoted_spliced$Label,"-", pivoted_spliced$Data_Category )
+
+pSIRVspliced <- ggplot(pivoted_spliced, aes(x=full_Label, y=value)) +
+  geom_segment( aes(x=full_Label, xend=full_Label, y=0, yend=value, color=Lib_Plat), size=0.8) +
   geom_point( size=2, aes( shape=Data_Category, color=Lib_Plat ))  +
   facet_grid( metrics ~ Alias, scales = "free", space = "free_x", switch = "y"  ) +
   pub_theme +
@@ -107,8 +149,11 @@ pivoted_unspliced <- pivot_longer(unspliced_SIRV_metrics,
 pivoted_unspliced$metrics  <- pivoted_unspliced$metrics %>% factor(levels = c("Sensitivity","Precision", "F1 score"),
                                                                    labels = c("Sensitivity","Precision", "F1 score"))
 
-pSIRVunspliced <- ggplot(pivoted_unspliced, aes(x=Label, y=value)) +
-  geom_segment( aes(x=Label, xend=Label, y=0, yend=value, color=Lib_Plat), size=0.8) +
+pivoted_unspliced$full_Label <- paste0(pivoted_unspliced$Label,"-", pivoted_unspliced$Data_Category )
+
+
+pSIRVunspliced <- ggplot(pivoted_unspliced, aes(x=full_Label, y=value)) +
+  geom_segment( aes(x=full_Label, xend=full_Label, y=0, yend=value, color=Lib_Plat), size=0.8) +
   geom_point( size=2, aes( shape=Data_Category, color=Lib_Plat ))  +
   facet_grid( metrics ~ Alias, scales = "free", space = "free_x", switch = "y"  ) +
   pub_theme +
