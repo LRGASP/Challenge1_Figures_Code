@@ -851,24 +851,114 @@ genocode_eval_mouse <- performance.genecode (gencode.pa = pa_GENCODE_mouse, ID_U
                                              directory = "Challenge1_Figures_Data/GENCODE_manualAnnot/classifications/mouse/")
 
 pivoted_gencode_gene_M <- pivot_longer(genocode_eval_mouse, cols = c("Sensitivity.Genes", "Precision.Genes", "F1_score.Genes"))
+pivoted_gencode_gene_M$name <- pivoted_gencode_gene_M$name %>% factor(levels = c("Sensitivity.Genes", "Precision.Genes", "F1_score.Genes"),
+                                                                  labels = c("Sensitivity", "Precision", "F1-score"))
+
 pivoted_gencode_known_M <- pivot_longer(genocode_eval_mouse , cols = c("Sensitivity_known", "Precision_known", "F1_known"))
+pivoted_gencode_known_M$name <- pivoted_gencode_known_M$name %>% factor(levels = c("Sensitivity_known", "Precision_known", "F1_known"),
+                                                                    labels = c("Sensitivity", "Precision", "F1-score"))
+
 pivoted_gencode_novel_M <- pivot_longer(genocode_eval_mouse , cols = c("Sensitivity_novel", "Precision_novel", "F1_novel"))
+pivoted_gencode_novel_M$name <- pivoted_gencode_novel_M$name %>% factor(levels = c("Sensitivity_novel", "Precision_novel", "F1_novel"),
+                                                                    labels = c("Sensitivity", "Precision", "F1-score"))
 
 genocode_eval_mouse$False_known <- genocode_eval_mouse$Transcript_models_known - genocode_eval_mouse$TRUE_known
 genocode_eval_mouse$False_novel <- genocode_eval_mouse$Transcript_models_novel - genocode_eval_mouse$TRUE_novel
 pivoted_gencode_M_TP <- pivot_longer(genocode_eval_mouse , cols = c("TRUE_known", "TRUE_novel", "False_known", "False_novel"))
 pivoted_gencode_M_TP <- pivoted_gencode_M_TP[pivoted_gencode_M_TP$value > 0,]
+pivoted_gencode_M_TP$name <- pivoted_gencode_M_TP$name %>% factor(levels = c("TRUE_known","TRUE_novel",
+                                                                         "FALSE_known", "FALSE_novel"),
+                                                              labels = c("TRUE\nknown", "TRUE\nnovel",
+                                                                         "FALSE\nknown", "FALSE\nnovel"))
 
-pC.gene.left <- Performance_plot_left(pivoted_gencode_gene_M , main = "Gene level", axis.text.x = 7)
-pC.known.mid <- Performance_plot_middel(pivoted_gencode_known_M , main = "Known_transcript level", axis.text.x = 7)
-pC.novel <- Performance_plot_right(pivoted_gencode_novel_M , main = "Novel_transcript level", axis.text.x = 7)
+
+
+#pC.gene.left <- Performance_plot_left(pivoted_gencode_gene_M , main = "Gene level", axis.text.x = 7)
+pC.gene.left <- ggplot(pivoted_gencode_gene_M, aes(x=Label, y=value)) +
+  geom_segment( aes(x=Label, xend=Label, y=0, yend=value, color=Sample_code), size=0.8) +
+  geom_point( size=2, aes( shape=Data_Category, color=Sample_code ))  +
+  facet_grid( name ~ Alias, scales = "free", space = "free_x", switch = "y"  ) +
+  pub_theme +
+  scale_color_manual(values = libplat.palette) +
+  labs(x="", y="",
+       title="Gene level") +
+  theme(legend.position="bottom") +
+  theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(),
+        axis.text.y = element_text(size = 10))+
+  scale_y_continuous(expand=expansion(mult=c(0,0.1)),limits = c(0, 1), position="right")
+
+
+#pC.known.mid <- Performance_plot_middel(pivoted_gencode_known_M , main = "Known_transcript level", axis.text.x = 7)
+pC.known.mid <- ggplot(pivoted_gencode_known_M, aes(x=Label, y=value)) +
+  geom_segment( aes(x=Label, xend=Label, y=0, yend=value, color=Sample_code), size=0.8) +
+  geom_point( size=2, aes( shape=Data_Category, color=Sample_code ))  +
+  facet_grid( name ~ Alias, scales = "free", space = "free_x", switch = "y"  ) +
+  pub_theme +
+  scale_color_manual(values = libplat.palette) +
+  labs(x="", y="",
+       title="Known transcript level") +
+  theme(legend.position="bottom") +
+  theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(),
+        axis.text.y = element_text(size = 10))+
+  scale_y_continuous(expand=expansion(mult=c(0,0.1)),limits = c(0, 1), position="right")
+
+#pC.novel <- Performance_plot_right(pivoted_gencode_novel_M , main = "Novel_transcript level", axis.text.x = 7)
+pC.novel <- ggplot(pivoted_gencode_novel_M, aes(x=Label, y=value)) +
+  geom_segment( aes(x=Label, xend=Label, y=0, yend=value, color=Sample_code), size=0.8) +
+  geom_point( size=2, aes( shape=Data_Category, color=Sample_code ))  +
+  facet_grid( name ~ Alias, scales = "free", space = "free_x", switch = "y"  ) +
+  pub_theme +
+  scale_color_manual(values = libplat.palette) +
+  labs(x="", y="",
+       title="Novel transcript level") +
+  theme(legend.position="bottom") +
+  theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(),
+        axis.text.y = element_text(size = 10))+
+  scale_y_continuous(expand=expansion(mult=c(0,0.1)),limits = c(0, 1), position="right")
+
+#pC.TP <- Performance_plot_TP(pivoted_gencode_M_TP , main = "Number detected transcripts" )
+pC.TP <- ggplot(pivoted_gencode_M_TP, aes(x=Label, y=value)) +
+  geom_segment( aes(x=Label, xend=Label, y=0, yend=value, color=Sample_code), size=0.8) +
+  geom_point( size=2, aes( shape=Data_Category, color=Sample_code ))  +
+  facet_grid( name ~ Alias, scales = "free", space = "free_x", switch = "y"  ) +
+  pub_theme +
+  scale_color_manual(values = libplat.palette) +
+  labs(x="", y="",
+       title="Detected transcripts of manual curation") +
+  theme(legend.position="bottom") +
+  theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(),
+        axis.text.y = element_text(size = 10))+
+  scale_y_continuous(expand=expansion(mult=c(0,0.1)),limits = c(0, NA), position="right")
+
 
 suppl = "47"
-figureS47 <- ggarrange(pC.gene.left, pC.known.mid,  pC.novel, labels = c("", "", ""),
-                      ncol = 3, nrow = 1, common.legend = TRUE)
+figureS47 <- ggarrange(pC.gene.left, pC.known.mid,
+                       pC.novel, pC.TP,
+                       labels = c("a)", "b)", "c)", "d)"),
+                       ncol = 2, nrow = 2, common.legend = TRUE)
+  
+  #ggarrange(pC.gene.left, pC.known.mid,  pC.novel, labels = c("", "", ""),
+  #                   ncol = 3, nrow = 1, common.legend = TRUE)
+
 mylegend <- paste0("     Extended Data Fig. ", suppl, ". Performance metrics of LRGASP pipelines evaluate against GENCODE manual annotation \n     of mouse ES sample. Ba: Bambu, FM: Flames, FR: FLAIR, IQ: IsoQuant, IT: IsoTools, IB: Iso_IB, Ly: LyRic, \n     Ma: Mandalorion, TL: TALON-LAPA, Sp: Spectra, ST: StringTie2."  )
-pdf(paste0(outdir, "/Extended_Fig._",suppl,"_pipeline-by-gencode-manual",".pdf"))
-annotate_figure(figureS47,  bottom = text_grob(mylegend, hjust = 0,  x = 0,  size = 9))
+pdf(paste0(outdir, "/Extended_Fig._",suppl,"_pipeline-by-gencode-manual",".pdf"), width=20, height = 7)
+print(figureS47)
+dev.off()
+
+pdf(paste0(outdir, "/Extended_Fig._31_pipeline-by-gencode-manual-Genes",".pdf"), width=10, height = 5)
+print(pC.gene.left) 
+dev.off()
+
+pdf(paste0(outdir, "/Extended_Fig._31_pipeline-by-gencode-manual-KnownTrx",".pdf"), width=10, height = 5)
+print(pC.known.mid)
+dev.off()
+
+pdf(paste0(outdir, "/Extended_Fig._31_pipeline-by-gencode-manual-Novel",".pdf"), width=10, height = 5)
+print(pC.novel)
+dev.off()
+
+pdf(paste0(outdir, "/Extended_Fig._31_pipeline-by-gencode-manual-NumDetected",".pdf"), width=10, height = 5)
+print(pC.TP)
 dev.off()
 
 ## Extended Data Fig.48. Evaluation against GENCODE_mouse TP

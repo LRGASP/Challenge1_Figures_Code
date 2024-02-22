@@ -359,6 +359,7 @@ df_pivoted_summary$Rank_top <- cut(df_pivoted_summary$Ranking_adj,
                                    labels = top_shapes,
                                    include.lowest = T)
 
+df_pivoted_summary$Rank_top <- df_pivoted_summary$Rank_top %>% factor(levels=rev(top_shapes))
 
 custom_palette <- colorRampPalette(c("#F5962A", "#ECF52A"))
 top <- colorRampPalette(c("#B82D2D", "#F12626"))(3)
@@ -375,7 +376,7 @@ shapes_top <- c("Top1"=24,
                  "Top3"=22,
                  "Rest"=21)
 
-pdf(paste0(outdir,"/summary_challenge1_metrics.pdf"), width=9, height = 6)
+pdf(paste0(outdir,"/summary_challenge1_metrics.reorder_shapes.pdf"), width=9, height = 6)
 for (i in c("cDNA-PacBio", "cDNA-ONT",
            "CapTrap-PacBio", "CapTrap-ONT",
            "R2C2-ONT", "dRNA-ONT")){
