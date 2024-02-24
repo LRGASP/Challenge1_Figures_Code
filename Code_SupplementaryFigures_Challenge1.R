@@ -867,7 +867,7 @@ genocode_eval_mouse$False_novel <- genocode_eval_mouse$Transcript_models_novel -
 pivoted_gencode_M_TP <- pivot_longer(genocode_eval_mouse , cols = c("TRUE_known", "TRUE_novel", "False_known", "False_novel"))
 pivoted_gencode_M_TP <- pivoted_gencode_M_TP[pivoted_gencode_M_TP$value > 0,]
 pivoted_gencode_M_TP$name <- pivoted_gencode_M_TP$name %>% factor(levels = c("TRUE_known","TRUE_novel",
-                                                                         "FALSE_known", "FALSE_novel"),
+                                                                         "False_known", "False_novel"),
                                                               labels = c("TRUE\nknown", "TRUE\nnovel",
                                                                          "FALSE\nknown", "FALSE\nnovel"))
 
